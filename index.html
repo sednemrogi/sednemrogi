@@ -1,572 +1,486 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>sednemrogi.tech</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #0d0f14;
-      --surface: #161920;
-      --surface2: #1e2230;
-      --border: #2a2f42;
-      --accent: #4f8ef7;
-      --accent2: #f7a54f;
-      --text: #e8eaf2;
-      --text2: #8b90a8;
-      --green: #4ade80;
-      --red: #f87171;
-      --gremio-blue: #3b82f6;
-      --gremio-black: #111827;
+      --bg: #080b12;
+      --bg2: #0e1220;
+      --surface: #111827;
+      --surface2: #1a2236;
+      --surface3: #212d45;
+      --border: #1e2d47;
+      --border2: #2a3f60;
+      --accent: #3b82f6;
+      --accent-glow: rgba(59,130,246,0.15);
+      --accent2: #f59e0b;
+      --accent3: #10b981;
+      --text: #e2e8f8;
+      --text2: #64748b;
+      --text3: #94a3b8;
+      --green: #10b981;
+      --red: #ef4444;
+      --orange: #f97316;
       --btc: #f7931a;
+      --gremio: #3b82f6;
+      --radius: 16px;
+      --radius-sm: 10px;
     }
     body.light {
-      --bg: #f0f2f8;
+      --bg: #f1f5fb;
+      --bg2: #e8eef8;
       --surface: #ffffff;
-      --surface2: #e8ecf5;
-      --border: #c8cfe0;
-      --text: #1a1d2e;
-      --text2: #5a607a;
+      --surface2: #f0f4fc;
+      --surface3: #e4ebf8;
+      --border: #d0daf0;
+      --border2: #b8c8e8;
+      --text: #0f172a;
+      --text2: #64748b;
+      --text3: #475569;
+      --accent-glow: rgba(59,130,246,0.08);
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
+    html { scroll-behavior: smooth; }
     body {
-      font-family: 'Syne', sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
       transition: background 0.3s, color 0.3s;
+      overflow-x: hidden;
     }
 
-    /* ── LOGIN ── */
+    /* LOGIN */
     #login-screen {
       position: fixed; inset: 0;
       display: flex; align-items: center; justify-content: center;
-      background: var(--bg);
-      z-index: 1000;
-      flex-direction: column;
-      gap: 2rem;
+      background: var(--bg); z-index: 1000; overflow: hidden;
+    }
+    .login-bg {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 70%),
+                  radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.06) 0%, transparent 60%);
+    }
+    .login-grid {
+      position: absolute; inset: 0;
+      background-image: linear-gradient(var(--border) 1px, transparent 1px),
+                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
+      background-size: 40px 40px; opacity: 0.3;
     }
     .login-box {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 2.5rem 2rem;
-      width: min(380px, 92vw);
-      text-align: center;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
-    }
-    .login-logo {
-      font-size: 1.1rem;
-      font-weight: 800;
-      letter-spacing: 0.15em;
-      color: var(--accent);
-      margin-bottom: 0.3rem;
-    }
-    .login-sub {
-      font-size: 0.75rem;
-      color: var(--text2);
-      font-family: 'DM Mono', monospace;
-      margin-bottom: 2rem;
-    }
-    .login-input {
-      width: 100%;
-      padding: 0.85rem 1.2rem;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-      font-size: 1rem;
-      letter-spacing: 0.2em;
-      outline: none;
-      margin-bottom: 1rem;
-      transition: border-color 0.2s;
-      text-align: center;
-    }
-    .login-input:focus { border-color: var(--accent); }
-    .login-btn {
-      width: 100%;
-      padding: 0.85rem;
-      background: var(--accent);
-      color: #fff;
-      border: none;
-      border-radius: 10px;
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: opacity 0.2s, transform 0.1s;
-    }
-    .login-btn:hover { opacity: 0.9; }
-    .login-btn:active { transform: scale(0.98); }
-    .login-error {
-      color: var(--red);
-      font-size: 0.82rem;
-      font-family: 'DM Mono', monospace;
-      margin-top: 0.6rem;
-      min-height: 1.2rem;
-    }
-
-    /* ── MAIN ── */
-    #app { display: none; }
-    #app.visible { display: block; }
-
-    header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.2rem 2rem;
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0;
-      background: var(--bg);
-      z-index: 100;
-    }
-    .header-logo {
-      font-size: 1rem;
-      font-weight: 800;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-    }
-    .header-right { display: flex; gap: 0.7rem; align-items: center; }
-    .icon-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 0.5rem 0.8rem;
-      color: var(--text);
-      cursor: pointer;
-      font-size: 1.1rem;
-      transition: background 0.2s, border-color 0.2s;
-      line-height: 1;
-    }
-    .icon-btn:hover { background: var(--surface2); border-color: var(--accent); }
-
-    main {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 2rem 1.2rem 4rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-      gap: 1.2rem;
-    }
-
-    /* ── CARDS ── */
-    .card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 1.5rem;
-      transition: border-color 0.2s, transform 0.2s;
       position: relative;
-      overflow: hidden;
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 24px;
+      padding: 3rem 2.5rem;
+      width: min(420px, 92vw);
+      text-align: center;
+      box-shadow: 0 0 0 1px rgba(59,130,246,0.1), 0 24px 80px rgba(0,0,0,0.5);
     }
-    .card:hover { border-color: var(--accent); transform: translateY(-2px); }
-    .card-label {
-      font-size: 0.65rem;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.15em;
-      color: var(--text2);
-      text-transform: uppercase;
-      margin-bottom: 0.8rem;
-    }
-    .card-title {
-      font-size: 1.3rem;
-      font-weight: 800;
-      margin-bottom: 0.4rem;
-    }
-
-    /* ── GRÊMIO ── */
-    .gremio-card { border-color: #3b82f620; }
-    .gremio-card:hover { border-color: var(--gremio-blue); }
-    .gremio-header {
-      display: flex; align-items: center; gap: 0.8rem; margin-bottom: 1rem;
-    }
-    .gremio-badge {
-      width: 48px; height: 48px; border-radius: 50%;
-      background: linear-gradient(135deg, #1d4ed8, #111827);
+    .login-dot {
+      width: 56px; height: 56px;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      border-radius: 16px;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.4rem; flex-shrink: 0;
+      font-size: 1.5rem; margin: 0 auto 1.5rem;
+      box-shadow: 0 8px 24px rgba(59,130,246,0.35);
     }
-    .gremio-name { font-weight: 800; font-size: 1rem; }
-    .gremio-sub { font-size: 0.75rem; color: var(--text2); font-family: 'DM Mono', monospace; }
-    .match-box {
-      background: var(--surface2);
-      border-radius: 12px;
-      padding: 1rem;
-      margin-bottom: 0.8rem;
+    .login-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
+    .login-sub { font-size: 0.8rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-bottom: 2rem; letter-spacing: 0.05em; }
+    .login-input {
+      width: 100%; padding: 0.9rem 1.2rem;
+      background: var(--surface2); border: 1.5px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: 'JetBrains Mono', monospace; font-size: 1rem; letter-spacing: 0.25em;
+      outline: none; margin-bottom: 1rem; transition: border-color 0.2s, box-shadow 0.2s; text-align: center;
     }
-    .match-comp {
-      font-size: 0.6rem;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
+    .login-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .login-btn {
+      width: 100%; padding: 0.9rem;
+      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+      color: #fff; border: none; border-radius: var(--radius-sm);
+      font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.02em;
+      transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
+      box-shadow: 0 4px 16px rgba(59,130,246,0.35);
     }
-    .match-teams {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-    .match-vs {
-      font-size: 0.7rem;
-      color: var(--text2);
-      font-family: 'DM Mono', monospace;
-    }
-    .match-date {
-      font-size: 0.72rem;
-      color: var(--text2);
-      font-family: 'DM Mono', monospace;
-      margin-top: 0.5rem;
-    }
-    .standings-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.78rem;
-      padding: 0.35rem 0;
-      border-bottom: 1px solid var(--border);
-      font-family: 'DM Mono', monospace;
-    }
-    .standings-row:last-child { border-bottom: none; }
-    .pos-num { color: var(--accent); font-weight: 700; width: 24px; }
+    .login-btn:hover { opacity: 0.92; box-shadow: 0 6px 24px rgba(59,130,246,0.45); }
+    .login-btn:active { transform: scale(0.98); }
+    .login-error { color: var(--red); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; margin-top: 0.7rem; min-height: 1.2rem; }
 
-    /* ── BTC ── */
-    .btc-card { border-color: #f7931a20; }
-    .btc-card:hover { border-color: var(--btc); }
-    .btc-price {
-      font-size: 2.2rem;
-      font-weight: 800;
-      color: var(--btc);
-      line-height: 1;
-      margin: 0.3rem 0;
-      font-family: 'DM Mono', monospace;
+    /* APP */
+    #app { display: none; }
+    #app.visible { display: block; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+
+    /* HEADER */
+    header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.9rem 1.5rem;
+      background: rgba(8,11,18,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      position: sticky; top: 0; z-index: 100;
     }
-    .btc-change {
-      font-size: 0.85rem;
-      font-family: 'DM Mono', monospace;
-      margin-top: 0.3rem;
+    body.light header { background: rgba(241,245,251,0.9); }
+    .header-logo {
+      font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; color: var(--accent);
+      font-family: 'JetBrains Mono', monospace;
+      display: flex; align-items: center; gap: 0.5rem;
     }
-    .btc-change.up { color: var(--green); }
-    .btc-change.down { color: var(--red); }
-    .btc-updated {
-      font-size: 0.65rem;
-      color: var(--text2);
-      font-family: 'DM Mono', monospace;
-      margin-top: 0.6rem;
-    }
-    .btc-pulse {
-      display: inline-block;
-      width: 7px; height: 7px;
-      border-radius: 50%;
-      background: var(--green);
-      margin-right: 5px;
+    .live-indicator {
+      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
       animation: pulse 2s infinite;
     }
-    @keyframes pulse {
-      0%,100% { opacity: 1; } 50% { opacity: 0.3; }
+    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
+    .header-right { display: flex; gap: 0.5rem; align-items: center; }
+    .hbtn {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.45rem 0.9rem;
+      color: var(--text3); cursor: pointer; font-size: 0.82rem;
+      transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+    }
+    .hbtn:hover { background: var(--surface2); border-color: var(--accent); color: var(--text); }
+
+    /* GRID */
+    main {
+      max-width: 1400px; margin: 0 auto;
+      padding: 1.2rem 1.2rem 3rem;
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 1rem;
+    }
+    .col-3  { grid-column: span 3; }
+    .col-4  { grid-column: span 4; }
+    .col-6  { grid-column: span 6; }
+    .col-8  { grid-column: span 8; }
+    .col-12 { grid-column: span 12; }
+    @media (max-width: 1100px) {
+      .col-3 { grid-column: span 6; }
+      .col-4 { grid-column: span 6; }
+      .col-8 { grid-column: span 12; }
+    }
+    @media (max-width: 680px) {
+      main { grid-template-columns: 1fr; padding: 0.8rem; }
+      .col-3,.col-4,.col-6,.col-8,.col-12 { grid-column: span 1; }
     }
 
-    /* ── BUTTONS GRID ── */
-    .btn-card {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-      cursor: pointer;
+    /* CARD */
+    .card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.4rem;
+      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      position: relative; overflow: hidden;
     }
-    .big-btn {
-      width: 100%;
-      padding: 1rem 1.2rem;
-      border-radius: 12px;
-      border: 1.5px solid var(--border);
-      background: var(--surface2);
-      color: var(--text);
-      font-family: 'Syne', sans-serif;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-      transition: all 0.2s;
-      text-align: left;
+    .card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border2), transparent);
     }
-    .big-btn:hover {
-      background: var(--accent);
-      color: #fff;
-      border-color: var(--accent);
-      transform: translateX(4px);
+    .card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
+    .clabel {
+      font-size: 0.62rem; font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 0.14em; color: var(--text2);
+      text-transform: uppercase; margin-bottom: 0.9rem;
+      display: flex; align-items: center; gap: 0.4rem;
     }
-    .big-btn .btn-icon { font-size: 1.3rem; }
-    .big-btn .btn-desc {
-      font-size: 0.7rem;
-      font-family: 'DM Mono', monospace;
-      color: var(--text2);
-      font-weight: 400;
-      display: block;
-      margin-top: 1px;
-    }
-    .big-btn:hover .btn-desc { color: rgba(255,255,255,0.75); }
-    .btn-text { display: flex; flex-direction: column; }
+    .clabel-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
 
-    /* ── IFRAME MODAL ── */
-    #modal-overlay {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.85);
-      z-index: 500;
-      flex-direction: column;
+    /* GRÊMIO */
+    .gremio-card { border-color: rgba(59,130,246,0.2); }
+    .gremio-card:hover { border-color: rgba(59,130,246,0.45); box-shadow: 0 8px 32px rgba(59,130,246,0.08); }
+    .gremio-top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.1rem; }
+    .gremio-badge {
+      width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
+      background: linear-gradient(135deg, #1e40af, #1e3a8a);
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+      box-shadow: 0 4px 16px rgba(30,64,175,0.4);
     }
-    #modal-overlay.open { display: flex; }
-    #modal-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0.6rem 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+    .gremio-name { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
+    .gremio-sub { font-size: 0.72rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
+    .match-box {
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
     }
-    #modal-title {
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: var(--text);
-      font-family: 'DM Mono', monospace;
-    }
-    #modal-close {
-      background: var(--red);
-      color: #fff;
-      border: none;
-      border-radius: 8px;
-      padding: 0.35rem 0.9rem;
-      font-family: 'Syne', sans-serif;
-      font-weight: 700;
-      cursor: pointer;
-      font-size: 0.85rem;
-    }
-    #modal-frame {
-      flex: 1;
-      border: none;
-      width: 100%;
-    }
+    .match-comp { font-size: 0.58rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.6rem; }
+    .match-teams { display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.95rem; }
+    .match-vs { font-size: 0.65rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
+    .match-date { font-size: 0.68rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; }
+    .standing-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
+    .standing-item:last-child { border-bottom: none; }
+    .standing-pos { width: 30px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
+    .pos-danger { background: rgba(239,68,68,0.15); color: var(--red); }
+    .pos-ok     { background: rgba(59,130,246,0.12); color: var(--accent); }
+    .pos-win    { background: rgba(16,185,129,0.12); color: var(--green); }
+    .standing-name { flex: 1; font-weight: 500; }
+    .standing-badge { font-size: 0.6rem; font-family: 'JetBrains Mono', monospace; padding: 0.2rem 0.5rem; border-radius: 20px; font-weight: 600; }
+    .badge-danger { background: rgba(239,68,68,0.1); color: var(--red); }
+    .badge-ok     { background: rgba(59,130,246,0.1); color: var(--accent); }
+    .badge-win    { background: rgba(16,185,129,0.1); color: var(--green); }
 
-    /* ── GIRO CARDS ── */
+    /* PREÇOS */
+    .btc-card { border-color: rgba(247,147,26,0.2); }
+    .btc-card:hover { border-color: rgba(247,147,26,0.4); box-shadow: 0 8px 32px rgba(247,147,26,0.06); }
+    .usd-card { border-color: rgba(16,185,129,0.2); }
+    .usd-card:hover { border-color: rgba(16,185,129,0.4); box-shadow: 0 8px 32px rgba(16,185,129,0.06); }
+    .price-main { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin: 0.2rem 0 0.4rem; font-family: 'JetBrains Mono', monospace; }
+    .price-btc { color: var(--btc); }
+    .price-usd { color: var(--green); }
+    .price-change { font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
+    .up { color: var(--green); } .down { color: var(--red); }
+    .price-meta { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.5rem; margin-top: 0.9rem; }
+    .meta-item { background: var(--surface2); border-radius: 8px; padding: 0.5rem 0.6rem; }
+    .meta-label { font-size: 0.58rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
+    .meta-val { font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
+    .live-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6rem; font-family: 'JetBrains Mono', monospace; color: var(--text2); margin-top: 0.6rem; }
+    .live-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+
+    /* MENSAGENS */
+    .msg-btn {
+      width: 100%; padding: 0.85rem 1rem;
+      background: var(--surface2); border: 1px solid var(--border);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 600;
+      cursor: pointer; display: flex; align-items: center; gap: 0.8rem;
+      transition: all 0.2s; text-align: left; margin-bottom: 0.6rem;
+    }
+    .msg-btn:last-child { margin-bottom: 0; }
+    .msg-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateX(3px); box-shadow: 0 4px 16px rgba(59,130,246,0.3); }
+    .msg-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .icon-tg { background: rgba(59,130,246,0.15); }
+    .icon-wa { background: rgba(16,185,129,0.15); }
+    .msg-btn:hover .msg-icon { background: rgba(255,255,255,0.15); }
+    .msg-texts { display: flex; flex-direction: column; }
+    .msg-name { font-weight: 700; }
+    .msg-desc { font-size: 0.65rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
+    .msg-btn:hover .msg-desc { color: rgba(255,255,255,0.7); }
+
+    /* GIRO */
     .giro-card { cursor: pointer; }
-    .giro-icon {
-      font-size: 2rem;
-      margin-bottom: 0.5rem;
-    }
-    .giro-desc {
-      font-size: 0.78rem;
-      color: var(--text2);
-      font-family: 'DM Mono', monospace;
-      line-height: 1.5;
-    }
-    .tag {
-      display: inline-block;
-      font-size: 0.6rem;
-      font-family: 'DM Mono', monospace;
-      letter-spacing: 0.1em;
-      padding: 0.2rem 0.5rem;
-      border-radius: 20px;
-      background: var(--surface2);
-      border: 1px solid var(--border);
-      color: var(--text2);
-      margin-bottom: 0.8rem;
-    }
+    .giro-card:hover { border-color: var(--accent); box-shadow: 0 8px 32px var(--accent-glow); }
+    .giro-icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 0.9rem; }
+    .geo-icon { background: rgba(99,102,241,0.15); }
+    .fin-icon { background: rgba(16,185,129,0.15); }
+    .giro-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
+    .giro-desc { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
+    .giro-arrow { position: absolute; bottom: 1.2rem; right: 1.2rem; color: var(--text2); font-size: 1rem; transition: transform 0.2s, color 0.2s; }
+    .giro-card:hover .giro-arrow { transform: translate(2px,-2px); color: var(--accent); }
 
-    /* ── GIRO MODAL ── */
-    #giro-modal {
-      display: none;
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.9);
-      z-index: 600;
-      flex-direction: column;
-    }
+    /* NOTAS */
+    .notes-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
+    .ntab { padding: 0.4rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .ntab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .ntab:not(.active):hover { border-color: var(--border2); color: var(--text); }
+    .note-panel { display: none; }
+    .note-panel.active { display: block; }
+    .note-textarea { width: 100%; min-height: 180px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.9rem; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; line-height: 1.6; resize: vertical; outline: none; transition: border-color 0.2s; }
+    .note-textarea:focus { border-color: var(--accent); }
+    .note-footer { display: flex; align-items: center; margin-top: 0.6rem; }
+    .note-save { padding: 0.4rem 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text2); font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+    .note-save:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .note-saved { color: var(--green); font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; margin-left: 0.5rem; opacity: 0; transition: opacity 0.3s; }
+    .note-saved.show { opacity: 1; }
+    .task-input-row { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
+    .task-input { flex: 1; padding: 0.6rem 0.9rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
+    .task-input:focus { border-color: var(--accent); }
+    .task-add { padding: 0.6rem 1rem; background: var(--accent); border: none; border-radius: 8px; color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
+    .task-add:hover { opacity: 0.85; }
+    .task-list { display: flex; flex-direction: column; gap: 0.4rem; max-height: 200px; overflow-y: auto; }
+    .task-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.8rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s; }
+    .task-item.done { opacity: 0.5; }
+    .task-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border2); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
+    .task-item.done .task-check { background: var(--green); border-color: var(--green); }
+    .task-text { flex: 1; font-size: 0.82rem; }
+    .task-item.done .task-text { text-decoration: line-through; color: var(--text2); }
+    .task-del { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 0.9rem; padding: 0.1rem 0.3rem; border-radius: 4px; transition: all 0.2s; }
+    .task-del:hover { background: rgba(239,68,68,0.15); color: var(--red); }
+
+    /* MODAIS */
+    #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; flex-direction: column; }
+    #modal-overlay.open { display: flex; }
+    #modal-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.7rem 1.2rem; display: flex; align-items: center; justify-content: space-between; }
+    #modal-title { font-size: 0.9rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+    #modal-close { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 0.4rem 1rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+    #modal-frame { flex: 1; border: none; width: 100%; }
+    #giro-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 600; flex-direction: column; }
     #giro-modal.open { display: flex; }
-    #giro-bar {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 0.8rem 1.2rem;
-      display: flex; align-items: center; justify-content: space-between;
-    }
-    #giro-title { font-size: 1rem; font-weight: 800; color: var(--accent); }
-    #giro-close {
-      background: var(--red); color: #fff; border: none;
-      border-radius: 8px; padding: 0.35rem 0.9rem;
-      font-family: 'Syne', sans-serif; font-weight: 700; cursor: pointer;
-    }
-    #giro-content {
-      flex: 1; overflow-y: auto; padding: 1.5rem;
-      font-family: 'DM Mono', monospace; line-height: 1.8;
-      font-size: 0.9rem; color: var(--text);
-    }
-    #giro-content h2 {
-      font-family: 'Syne', sans-serif; font-size: 1.2rem;
-      color: var(--accent); margin: 1.5rem 0 0.5rem;
-    }
-    #giro-content p { color: var(--text2); margin-bottom: 0.8rem; }
-    #giro-loading {
-      display: flex; align-items: center; justify-content: center;
-      gap: 0.5rem; padding: 3rem; color: var(--text2);
-      font-family: 'DM Mono', monospace;
-    }
-    .spinner {
-      width: 18px; height: 18px;
-      border: 2px solid var(--border);
-      border-top-color: var(--accent);
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-    }
+    #giro-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.9rem 1.4rem; display: flex; align-items: center; justify-content: space-between; }
+    #giro-title { font-size: 1rem; font-weight: 700; color: var(--accent); }
+    #giro-close { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 0.4rem 1rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; }
+    #giro-content { flex: 1; overflow-y: auto; padding: 2rem; font-family: 'Space Grotesk', sans-serif; line-height: 1.8; font-size: 0.95rem; color: var(--text); max-width: 860px; margin: 0 auto; width: 100%; }
+    #giro-content h2 { font-size: 1.15rem; color: var(--accent); margin: 1.8rem 0 0.6rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 0.8rem; }
+    #giro-content p { color: var(--text3); margin-bottom: 0.8rem; }
+    #giro-content strong { color: var(--text); }
+    .giro-loading { display: flex; align-items: center; justify-content: center; gap: 0.7rem; padding: 4rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
-
-    /* mobile */
-    @media (max-width: 600px) {
-      main { grid-template-columns: 1fr; padding: 1rem 0.8rem 3rem; }
-      header { padding: 1rem; }
-      .btc-price { font-size: 1.8rem; }
-    }
   </style>
 </head>
 <body>
 
-<!-- ══ LOGIN ══ -->
+<!-- LOGIN -->
 <div id="login-screen">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
   <div class="login-box">
-    <div class="login-logo">SEDNEMROGI.TECH</div>
-    <div class="login-sub">painel pessoal · acesso restrito</div>
-    <input type="password" id="pwd-input" class="login-input" placeholder="••••••••"
-      onkeydown="if(event.key==='Enter') doLogin()" autofocus />
+    <div class="login-dot">🔐</div>
+    <div class="login-title">Acesso Restrito</div>
+    <div class="login-sub">sednemrogi.tech · painel pessoal</div>
+    <input type="password" id="pwd-input" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" autofocus/>
     <button class="login-btn" onclick="doLogin()">Entrar</button>
     <div class="login-error" id="login-err"></div>
   </div>
 </div>
 
-<!-- ══ APP ══ -->
+<!-- APP -->
 <div id="app">
   <header>
-    <div class="header-logo">SEDNEMROGI.TECH</div>
+    <div class="header-logo">
+      <div class="live-indicator"></div>
+      SEDNEMROGI.TECH
+    </div>
     <div class="header-right">
-      <button class="icon-btn" onclick="toggleTheme()" id="theme-btn" title="Alternar tema">🌙</button>
-      <button class="icon-btn" onclick="doLogout()" title="Sair">🔒</button>
+      <button class="hbtn" onclick="toggleTheme()" id="theme-btn">🌙 Escuro</button>
+      <button class="hbtn" onclick="doLogout()">🔒 Sair</button>
     </div>
   </header>
 
   <main>
 
     <!-- GRÊMIO -->
-    <div class="card gremio-card" style="grid-column: span 1;">
-      <div class="card-label">⚽ Próximo Jogo</div>
-      <div class="gremio-header">
-        <div class="gremio-badge">🔵</div>
+    <div class="card gremio-card col-4">
+      <div class="clabel"><span class="clabel-dot"></span>Próximo Jogo</div>
+      <div class="gremio-top">
+        <div class="gremio-badge">⚽</div>
         <div>
           <div class="gremio-name">Grêmio FBPA</div>
           <div class="gremio-sub">Tricolor Gaúcho</div>
         </div>
       </div>
-
       <div class="match-box">
-        <div class="match-comp">🏆 Copa do Brasil 2026</div>
+        <div class="match-comp">🏆 Copa Betano do Brasil 2026</div>
         <div class="match-teams">
           <span>Confiança</span>
           <span class="match-vs">vs</span>
-          <span style="color:var(--gremio-blue)">Grêmio</span>
+          <span style="color:var(--gremio)">Grêmio</span>
         </div>
-        <div class="match-date">📅 14/05/2026 · 19:00 (horário de Brasília) · Arena</div>
+        <div class="match-date">📅 14/05/2026 · 19h00 · Horário de Brasília</div>
       </div>
-
-      <div class="card-label" style="margin-top:1rem">📊 Situação nos campeonatos</div>
-      <div class="standings-row">
-        <span class="pos-num">13º</span>
-        <span>Brasileirão Série A</span>
-        <span style="color:var(--text2);font-size:0.7rem">Rod. 15/38</span>
+      <div class="clabel"><span class="clabel-dot"></span>Situação nos Campeonatos</div>
+      <div class="standing-item">
+        <div class="standing-pos pos-danger">17º</div>
+        <div class="standing-name">Brasileirão Série A</div>
+        <div class="standing-badge badge-danger">⚠ Z-4 · Rod.15</div>
       </div>
-      <div class="standings-row">
-        <span class="pos-num">—</span>
-        <span>Copa do Brasil</span>
-        <span style="color:var(--green);font-size:0.7rem">Em disputa</span>
+      <div class="standing-item">
+        <div class="standing-pos pos-ok">—</div>
+        <div class="standing-name">Copa do Brasil</div>
+        <div class="standing-badge badge-ok">Em disputa</div>
       </div>
-      <div class="standings-row">
-        <span class="pos-num">—</span>
-        <span>Sul-Americana</span>
-        <span style="color:var(--green);font-size:0.7rem">Em disputa</span>
+      <div class="standing-item">
+        <div class="standing-pos pos-ok">—</div>
+        <div class="standing-name">Sul-Americana</div>
+        <div class="standing-badge badge-ok">Em disputa</div>
       </div>
-      <div class="standings-row">
-        <span class="pos-num">🏆</span>
-        <span>Gauchão 2026</span>
-        <span style="color:var(--accent2);font-size:0.7rem">Campeão ✓</span>
+      <div class="standing-item">
+        <div class="standing-pos pos-win">🏆</div>
+        <div class="standing-name">Gauchão 2026</div>
+        <div class="standing-badge badge-win">Campeão ✓</div>
       </div>
     </div>
 
     <!-- BTC -->
-    <div class="card btc-card">
-      <div class="card-label">₿ Bitcoin · USD</div>
-      <div class="btc-price" id="btc-price">—</div>
-      <div class="btc-change" id="btc-change">carregando...</div>
-      <div class="btc-updated" id="btc-updated"></div>
-      <div style="margin-top:1rem">
-        <div class="card-label">Mercado</div>
-        <div style="display:flex;gap:1rem;font-family:'DM Mono',monospace;font-size:0.78rem;">
-          <div>
-            <div style="color:var(--text2);font-size:0.65rem">24h High</div>
-            <div id="btc-high">—</div>
-          </div>
-          <div>
-            <div style="color:var(--text2);font-size:0.65rem">24h Low</div>
-            <div id="btc-low">—</div>
-          </div>
-          <div>
-            <div style="color:var(--text2);font-size:0.65rem">Vol. (BTC)</div>
-            <div id="btc-vol">—</div>
-          </div>
+    <div class="card btc-card col-4">
+      <div class="clabel"><span class="clabel-dot" style="background:var(--btc)"></span>Bitcoin · USD</div>
+      <div class="price-main price-btc" id="btc-price">—</div>
+      <div class="price-change" id="btc-change">carregando...</div>
+      <div class="price-meta">
+        <div class="meta-item"><div class="meta-label">24h Max</div><div class="meta-val" id="btc-high">—</div></div>
+        <div class="meta-item"><div class="meta-label">24h Min</div><div class="meta-val" id="btc-low">—</div></div>
+        <div class="meta-item"><div class="meta-label">Volume</div><div class="meta-val" id="btc-vol">—</div></div>
+      </div>
+      <div class="live-tag" id="btc-updated">aguardando...</div>
+    </div>
+
+    <!-- USD/BRL -->
+    <div class="card usd-card col-4">
+      <div class="clabel"><span class="clabel-dot" style="background:var(--green)"></span>Dólar · BRL</div>
+      <div class="price-main price-usd" id="usd-price">—</div>
+      <div class="price-change" id="usd-change">carregando...</div>
+      <div class="price-meta">
+        <div class="meta-item"><div class="meta-label">Compra</div><div class="meta-val" id="usd-buy">—</div></div>
+        <div class="meta-item"><div class="meta-label">Venda</div><div class="meta-val" id="usd-sell">—</div></div>
+        <div class="meta-item"><div class="meta-label">Fonte</div><div class="meta-val" style="font-size:0.68rem">AwesomeAPI</div></div>
+      </div>
+      <div class="live-tag" id="usd-updated">aguardando...</div>
+    </div>
+
+    <!-- MENSAGENS -->
+    <div class="card col-3">
+      <div class="clabel"><span class="clabel-dot"></span>Mensagens</div>
+      <button class="msg-btn" onclick="openModal('https://web.telegram.org','✈️ Telegram Web')">
+        <div class="msg-icon icon-tg">✈️</div>
+        <div class="msg-texts">
+          <span class="msg-name">Telegram Web</span>
+          <span class="msg-desc">abre no painel · fecha junto</span>
+        </div>
+      </button>
+      <button class="msg-btn" onclick="openModal('https://web.whatsapp.com','💬 WhatsApp Web')">
+        <div class="msg-icon icon-wa">💬</div>
+        <div class="msg-texts">
+          <span class="msg-name">WhatsApp Web</span>
+          <span class="msg-desc">abre no painel · fecha junto</span>
+        </div>
+      </button>
+    </div>
+
+    <!-- GIRO GEO -->
+    <div class="card giro-card col-3" onclick="openGiro('geo')">
+      <div class="clabel"><span class="clabel-dot" style="background:#818cf8"></span>IA · Geopolítica</div>
+      <div class="giro-icon-wrap geo-icon">🌍</div>
+      <div class="giro-title">Giro Geopolítico</div>
+      <div class="giro-desc">Análise das principais movimentações geopolíticas globais, gerada por IA em tempo real.</div>
+      <div class="giro-arrow">↗</div>
+    </div>
+
+    <!-- GIRO FIN -->
+    <div class="card giro-card col-3" onclick="openGiro('fin')">
+      <div class="clabel"><span class="clabel-dot" style="background:var(--green)"></span>IA · Mercados</div>
+      <div class="giro-icon-wrap fin-icon">📈</div>
+      <div class="giro-title">Giro Financeiro</div>
+      <div class="giro-desc">Panorama dos mercados financeiros e economia global, gerado por IA em tempo real.</div>
+      <div class="giro-arrow">↗</div>
+    </div>
+
+    <!-- NOTAS + TAREFAS -->
+    <div class="card col-3">
+      <div class="clabel"><span class="clabel-dot" style="background:var(--accent2)"></span>Bloco de Notas</div>
+      <div class="notes-tabs">
+        <button class="ntab active" onclick="switchTab('notes')">📝 Notas</button>
+        <button class="ntab" onclick="switchTab('tasks')">✅ Missões</button>
+      </div>
+      <div class="note-panel active" id="panel-notes">
+        <textarea class="note-textarea" id="note-text" placeholder="Suas anotações aqui..."></textarea>
+        <div class="note-footer">
+          <button class="note-save" onclick="saveNote()">💾 Salvar</button>
+          <span class="note-saved" id="note-saved">✓ salvo</span>
         </div>
       </div>
-    </div>
-
-    <!-- TELEGRAM -->
-    <div class="card btn-card">
-      <div class="card-label">💬 Mensagens</div>
-      <button class="big-btn" onclick="openModal('https://web.telegram.org','Telegram Web')">
-        <span class="btn-icon">✈️</span>
-        <span class="btn-text">
-          Telegram Web
-          <span class="btn-desc">Abre dentro do painel · fecha junto</span>
-        </span>
-      </button>
-      <button class="big-btn" onclick="openModal('https://web.whatsapp.com','WhatsApp Web')">
-        <span class="btn-icon">💬</span>
-        <span class="btn-text">
-          WhatsApp Web
-          <span class="btn-desc">Abre dentro do painel · fecha junto</span>
-        </span>
-      </button>
-    </div>
-
-    <!-- GIRO GEOPOLÍTICO -->
-    <div class="card giro-card" onclick="openGiro('geo')">
-      <div class="tag">IA · Geopolítica</div>
-      <div class="giro-icon">🌍</div>
-      <div class="card-label">Análise</div>
-      <div class="card-title">Giro Geopolítico</div>
-      <div class="giro-desc">Resumo das principais movimentações geopolíticas globais gerado por IA. Clique para abrir.</div>
-    </div>
-
-    <!-- GIRO FINANCEIRO -->
-    <div class="card giro-card" onclick="openGiro('fin')">
-      <div class="tag">IA · Mercados</div>
-      <div class="giro-icon">📈</div>
-      <div class="card-label">Análise</div>
-      <div class="card-title">Giro Financeiro</div>
-      <div class="giro-desc">Panorama dos mercados financeiros globais gerado por IA. Clique para abrir.</div>
+      <div class="note-panel" id="panel-tasks">
+        <div class="task-input-row">
+          <input type="text" class="task-input" id="task-input" placeholder="Nova missão..." onkeydown="if(event.key==='Enter') addTask()"/>
+          <button class="task-add" onclick="addTask()">+</button>
+        </div>
+        <div class="task-list" id="task-list"></div>
+      </div>
     </div>
 
   </main>
 </div>
 
-<!-- ══ MODAL IFRAME (Telegram / WhatsApp) ══ -->
+<!-- MODAL IFRAME -->
 <div id="modal-overlay">
   <div id="modal-bar">
     <span id="modal-title"></span>
@@ -575,86 +489,82 @@
   <iframe id="modal-frame" src="" allow="camera; microphone; notifications"></iframe>
 </div>
 
-<!-- ══ MODAL GIRO ══ -->
+<!-- MODAL GIRO -->
 <div id="giro-modal">
   <div id="giro-bar">
     <span id="giro-title">Giro</span>
     <button id="giro-close" onclick="closeGiro()">✕ Fechar</button>
   </div>
   <div id="giro-content">
-    <div id="giro-loading">
-      <div class="spinner"></div> Gerando análise com IA...
-    </div>
+    <div class="giro-loading"><div class="spinner"></div> Gerando análise...</div>
   </div>
 </div>
 
 <script>
-// ── SENHA ──
 const SENHA = 'Estel@2023';
+let API_KEY = '';
 
 function doLogin() {
   const v = document.getElementById('pwd-input').value;
   if (v === SENHA) {
+    API_KEY = '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';
     document.getElementById('login-screen').style.display = 'none';
     document.getElementById('app').classList.add('visible');
     initApp();
   } else {
-    document.getElementById('login-err').textContent = 'Senha incorreta. Tente novamente.';
+    document.getElementById('login-err').textContent = 'Senha incorreta.';
     document.getElementById('pwd-input').value = '';
     document.getElementById('pwd-input').focus();
   }
 }
-
 function doLogout() {
+  API_KEY = '';
   document.getElementById('app').classList.remove('visible');
   document.getElementById('login-screen').style.display = 'flex';
   document.getElementById('pwd-input').value = '';
   document.getElementById('login-err').textContent = '';
 }
 
-// ── TEMA ──
 let darkMode = true;
 function toggleTheme() {
   darkMode = !darkMode;
   document.body.classList.toggle('light', !darkMode);
-  document.getElementById('theme-btn').textContent = darkMode ? '🌙' : '☀️';
+  document.getElementById('theme-btn').textContent = darkMode ? '🌙 Escuro' : '☀️ Claro';
 }
 
-// ── BTC ──
 async function fetchBTC() {
   try {
     const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
     const d = await r.json();
     const price = parseFloat(d.lastPrice);
     const change = parseFloat(d.priceChangePercent);
-    const high = parseFloat(d.highPrice);
-    const low = parseFloat(d.lowPrice);
-    const vol = parseFloat(d.volume);
-
-    document.getElementById('btc-price').textContent =
-      '$' + price.toLocaleString('en-US', {minimumFractionDigits:2, maximumFractionDigits:2});
-
+    document.getElementById('btc-price').textContent = '$'+price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
     const chEl = document.getElementById('btc-change');
-    chEl.textContent = (change >= 0 ? '▲ +' : '▼ ') + change.toFixed(2) + '% (24h)';
-    chEl.className = 'btc-change ' + (change >= 0 ? 'up' : 'down');
-
-    document.getElementById('btc-high').textContent =
-      '$' + high.toLocaleString('en-US', {maximumFractionDigits:0});
-    document.getElementById('btc-low').textContent =
-      '$' + low.toLocaleString('en-US', {maximumFractionDigits:0});
-    document.getElementById('btc-vol').textContent =
-      vol.toLocaleString('en-US', {maximumFractionDigits:0});
-
-    const now = new Date();
-    document.getElementById('btc-updated').innerHTML =
-      '<span class="btc-pulse"></span>Atualizado às ' +
-      now.toLocaleTimeString('pt-BR', {hour:'2-digit',minute:'2-digit'});
-  } catch(e) {
-    document.getElementById('btc-change').textContent = 'Erro ao carregar preço';
-  }
+    chEl.textContent = (change>=0?'▲ +':'▼ ')+change.toFixed(2)+'% (24h)';
+    chEl.className = 'price-change '+(change>=0?'up':'down');
+    document.getElementById('btc-high').textContent = '$'+parseFloat(d.highPrice).toLocaleString('en-US',{maximumFractionDigits:0});
+    document.getElementById('btc-low').textContent  = '$'+parseFloat(d.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
+    document.getElementById('btc-vol').textContent  = parseFloat(d.volume).toLocaleString('en-US',{maximumFractionDigits:0});
+    document.getElementById('btc-updated').textContent = 'Atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  } catch(e) { document.getElementById('btc-change').textContent = 'Erro ao carregar'; }
 }
 
-// ── MODAL IFRAME ──
+async function fetchUSD() {
+  try {
+    const r = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+    const d = await r.json();
+    const rate = parseFloat(d.USDBRL.bid);
+    const pct  = parseFloat(d.USDBRL.pctChange);
+    document.getElementById('usd-price').textContent = 'R$ '+rate.toLocaleString('pt-BR',{minimumFractionDigits:4,maximumFractionDigits:4});
+    const chEl = document.getElementById('usd-change');
+    chEl.textContent = (pct>=0?'▲ +':'▼ ')+pct.toFixed(2)+'% hoje';
+    chEl.className = 'price-change '+(pct>=0?'up':'down');
+    document.getElementById('usd-buy').textContent  = 'R$ '+parseFloat(d.USDBRL.bid).toFixed(4);
+    document.getElementById('usd-sell').textContent = 'R$ '+parseFloat(d.USDBRL.ask).toFixed(4);
+    document.getElementById('usd-updated').textContent = 'Atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
+  } catch(e) { document.getElementById('usd-change').textContent = 'Erro ao carregar'; }
+}
+
 function openModal(url, title) {
   document.getElementById('modal-title').textContent = title;
   document.getElementById('modal-frame').src = url;
@@ -665,25 +575,26 @@ function closeModal() {
   document.getElementById('modal-frame').src = '';
 }
 
-// ── GIRO IA ──
 async function openGiro(tipo) {
   const modal = document.getElementById('giro-modal');
   const title = document.getElementById('giro-title');
   const content = document.getElementById('giro-content');
   modal.classList.add('open');
-
   const isGeo = tipo === 'geo';
   title.textContent = isGeo ? '🌍 Giro Geopolítico' : '📈 Giro Financeiro';
-  content.innerHTML = '<div id="giro-loading"><div class="spinner"></div> Gerando análise com IA...</div>';
-
+  content.innerHTML = '<div class="giro-loading"><div class="spinner"></div> Gerando análise com IA...</div>';
   const prompt = isGeo
-    ? `Você é um analista geopolítico experiente. Faça um GIRO GEOPOLÍTICO completo e atualizado do cenário mundial atual (maio de 2026). Cubra: tensões entre grandes potências (EUA, China, Rússia, Europa), conflitos em curso, eleições relevantes, diplomacia e alianças. Use linguagem direta, objetiva e informativa. Formate com seções em HTML simples usando <h2> para títulos e <p> para parágrafos. Responda em português brasileiro.`
-    : `Você é um analista financeiro experiente. Faça um GIRO FINANCEIRO completo do cenário econômico global atual (maio de 2026). Cubra: bolsas de valores (S&P 500, Nasdaq, Bovespa), câmbio (USD/BRL, EUR/USD), commodities (petróleo, ouro), criptomoedas (Bitcoin, Ethereum), juros e inflação global. Use linguagem direta e informativa. Formate com seções em HTML simples usando <h2> para títulos e <p> para parágrafos. Responda em português brasileiro.`;
-
+    ? `Você é um analista geopolítico sênior. Produza um GIRO GEOPOLÍTICO detalhado e atualizado (maio de 2026). Cubra: tensões EUA-China, conflito Rússia-Ucrânia, Oriente Médio, América Latina, eleições relevantes e diplomacia global. Use HTML simples com <h2> para seções e <p> para parágrafos. Use <strong> para destacar pontos-chave. Responda em português brasileiro.`
+    : `Você é um analista financeiro sênior. Produza um GIRO FINANCEIRO detalhado (maio de 2026). Cubra: bolsas globais (S&P 500, Nasdaq, Bovespa), dólar/real, commodities (petróleo, ouro, soja), criptomoedas (BTC, ETH), juros Fed e Banco Central Brasil. Use HTML simples com <h2> para seções e <p> para parágrafos. Use <strong> para dados importantes. Responda em português brasileiro.`;
   try {
     const resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -691,20 +602,73 @@ async function openGiro(tipo) {
       })
     });
     const data = await resp.json();
-    const text = data.content?.map(b => b.text || '').join('') || 'Erro ao gerar análise.';
+    const text = data.content?.map(b => b.text||'').join('') || 'Erro ao gerar análise.';
     content.innerHTML = text;
   } catch(e) {
-    content.innerHTML = '<p style="color:var(--red)">Erro ao conectar com a IA. Tente novamente.</p>';
+    content.innerHTML = '<p style="color:var(--red)">Erro ao conectar. Verifique sua conexão.</p>';
   }
 }
-function closeGiro() {
-  document.getElementById('giro-modal').classList.remove('open');
+function closeGiro() { document.getElementById('giro-modal').classList.remove('open'); }
+
+function switchTab(tab) {
+  document.querySelectorAll('.ntab').forEach((t,i) => t.classList.toggle('active',(i===0&&tab==='notes')||(i===1&&tab==='tasks')));
+  document.getElementById('panel-notes').classList.toggle('active', tab==='notes');
+  document.getElementById('panel-tasks').classList.toggle('active', tab==='tasks');
 }
 
-// ── INIT ──
+function saveNote() {
+  localStorage.setItem('sednem_note', document.getElementById('note-text').value);
+  const s = document.getElementById('note-saved');
+  s.classList.add('show');
+  setTimeout(()=>s.classList.remove('show'), 2000);
+}
+function loadNote() {
+  const saved = localStorage.getItem('sednem_note');
+  if (saved) document.getElementById('note-text').value = saved;
+}
+
+let tasks = [];
+function loadTasks() {
+  const saved = localStorage.getItem('sednem_tasks');
+  if (saved) tasks = JSON.parse(saved);
+  renderTasks();
+}
+function saveTasks() { localStorage.setItem('sednem_tasks', JSON.stringify(tasks)); }
+function addTask() {
+  const input = document.getElementById('task-input');
+  const text = input.value.trim();
+  if (!text) return;
+  tasks.unshift({ id: Date.now(), text, done: false });
+  input.value = ''; saveTasks(); renderTasks();
+}
+function toggleTask(id) {
+  const t = tasks.find(t=>t.id===id);
+  if (t) t.done = !t.done;
+  saveTasks(); renderTasks();
+}
+function deleteTask(id) {
+  tasks = tasks.filter(t=>t.id!==id);
+  saveTasks(); renderTasks();
+}
+function renderTasks() {
+  const list = document.getElementById('task-list');
+  if (!tasks.length) {
+    list.innerHTML = '<div style="text-align:center;color:var(--text2);font-size:0.78rem;padding:1.5rem;font-family:JetBrains Mono,monospace">Nenhuma missão ainda</div>';
+    return;
+  }
+  list.innerHTML = tasks.map(t=>`
+    <div class="task-item ${t.done?'done':''}">
+      <div class="task-check" onclick="toggleTask(${t.id})">${t.done?'<span style="color:#fff;font-size:0.65rem;font-weight:700;line-height:1">✓</span>':''}</div>
+      <span class="task-text">${t.text}</span>
+      <button class="task-del" onclick="deleteTask(${t.id})">✕</button>
+    </div>
+  `).join('');
+}
+
 function initApp() {
-  fetchBTC();
-  setInterval(fetchBTC, 30000); // atualiza a cada 30s
+  fetchBTC(); fetchUSD(); loadNote(); loadTasks();
+  setInterval(fetchBTC, 30000);
+  setInterval(fetchUSD, 60000);
 }
 </script>
 </body>
