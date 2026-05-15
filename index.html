@@ -7,478 +7,664 @@
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
   <style>
     :root {
-      --bg: #080b12;
-      --bg2: #0e1220;
-      --surface: #111827;
-      --surface2: #1a2236;
-      --surface3: #212d45;
-      --border: #1e2d47;
-      --border2: #2a3f60;
-      --accent: #3b82f6;
-      --accent-glow: rgba(59,130,246,0.15);
-      --accent2: #f59e0b;
-      --accent3: #10b981;
-      --text: #e2e8f8;
-      --text2: #64748b;
-      --text3: #94a3b8;
-      --green: #10b981;
-      --red: #ef4444;
-      --orange: #f97316;
+      --bg: #07090f;
+      --surface: #0f1623;
+      --surface2: #172034;
+      --surface3: #1e2a42;
+      --border: #1f2e48;
+      --border2: #2d4266;
+      --accent: #4f8ef7;
+      --accent2: #7c3aed;
+      --text: #dde4f5;
+      --text2: #5a6a8a;
+      --text3: #8899bb;
+      --green: #22d3a0;
+      --red: #f25757;
       --btc: #f7931a;
-      --gremio: #3b82f6;
-      --radius: 16px;
-      --radius-sm: 10px;
+      --yellow: #fbbf24;
+      --r: 12px;
+      --r-sm: 8px;
+      --header-h: 46px;
+      --footer-h: 58px;
+      --sidebar-w: 224px;
     }
     body.light {
-      --bg: #f1f5fb;
-      --bg2: #e8eef8;
+      --bg: #eef2fa;
       --surface: #ffffff;
       --surface2: #f0f4fc;
-      --surface3: #e4ebf8;
-      --border: #d0daf0;
-      --border2: #b8c8e8;
-      --text: #0f172a;
-      --text2: #64748b;
-      --text3: #475569;
-      --accent-glow: rgba(59,130,246,0.08);
+      --surface3: #e6ecf8;
+      --border: #cdd8f0;
+      --border2: #b0c3e8;
+      --text: #0d1426;
+      --text2: #60708a;
+      --text3: #4a5a7a;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
+    html, body { height: 100%; overflow: hidden; }
     body {
       font-family: 'Space Grotesk', sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      min-height: 100vh;
+      background: var(--bg); color: var(--text);
       transition: background 0.3s, color 0.3s;
-      overflow-x: hidden;
     }
 
-    /* LOGIN */
-    #login-screen {
-      position: fixed; inset: 0;
-      display: flex; align-items: center; justify-content: center;
-      background: var(--bg); z-index: 1000; overflow: hidden;
+    /* ══ MARCA D'ÁGUA ══ */
+    .watermark {
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: min(480px, 50vw);
+      height: min(480px, 50vw);
+      pointer-events: none;
+      z-index: 5;
+      opacity: 0.08;
+      filter: grayscale(20%);
     }
-    .login-bg {
-      position: absolute; inset: 0;
-      background: radial-gradient(ellipse at 50% 0%, rgba(59,130,246,0.12) 0%, transparent 70%),
-                  radial-gradient(ellipse at 80% 80%, rgba(16,185,129,0.06) 0%, transparent 60%);
+
+    /* ══ LOGIN ══ */
+    #login-screen {
+      position: fixed; inset: 0; display: flex;
+      align-items: center; justify-content: center;
+      z-index: 1000; overflow: hidden;
+      background: radial-gradient(ellipse at 50% -10%, #1a2a4a 0%, #07090f 60%);
     }
     .login-grid {
       position: absolute; inset: 0;
-      background-image: linear-gradient(var(--border) 1px, transparent 1px),
-                        linear-gradient(90deg, var(--border) 1px, transparent 1px);
-      background-size: 40px 40px; opacity: 0.3;
+      background-image:
+        linear-gradient(rgba(79,142,247,0.06) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(79,142,247,0.06) 1px, transparent 1px);
+      background-size: 48px 48px;
+    }
+    .login-glow {
+      position: absolute; top: -20%; left: 50%;
+      transform: translateX(-50%);
+      width: 600px; height: 400px;
+      background: radial-gradient(ellipse, rgba(79,142,247,0.18) 0%, transparent 70%);
+      pointer-events: none;
     }
     .login-box {
-      position: relative;
-      background: var(--surface);
-      border: 1px solid var(--border2);
-      border-radius: 24px;
-      padding: 3rem 2.5rem;
-      width: min(420px, 92vw);
-      text-align: center;
-      box-shadow: 0 0 0 1px rgba(59,130,246,0.1), 0 24px 80px rgba(0,0,0,0.5);
+      position: relative; background: rgba(15,22,35,0.95);
+      border: 1px solid var(--border2); border-radius: 20px;
+      padding: 2.8rem 2.4rem; width: min(400px, 92vw); text-align: center;
+      box-shadow: 0 0 60px rgba(79,142,247,0.12), 0 24px 80px rgba(0,0,0,0.6);
+      backdrop-filter: blur(20px);
     }
-    .login-dot {
-      width: 56px; height: 56px;
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-      border-radius: 16px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; margin: 0 auto 1.5rem;
-      box-shadow: 0 8px 24px rgba(59,130,246,0.35);
+    .login-shield {
+      width: 64px; height: 64px; margin: 0 auto 1.4rem;
+      position: relative; display: flex; align-items: center; justify-content: center;
     }
-    .login-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.3rem; }
-    .login-sub { font-size: 0.8rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-bottom: 2rem; letter-spacing: 0.05em; }
+    .login-shield svg { width: 100%; height: 100%; }
+    .login-title { font-size: 1.3rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.25rem; color: var(--text); }
+    .login-sub { font-size: 0.72rem; color: var(--text2); font-family: 'JetBrains Mono',monospace; margin-bottom: 1.8rem; letter-spacing: 0.06em; }
     .login-input {
-      width: 100%; padding: 0.9rem 1.2rem;
-      background: var(--surface2); border: 1.5px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text);
-      font-family: 'JetBrains Mono', monospace; font-size: 1rem; letter-spacing: 0.25em;
-      outline: none; margin-bottom: 1rem; transition: border-color 0.2s, box-shadow 0.2s; text-align: center;
+      width: 100%; padding: 0.82rem 1.1rem;
+      background: rgba(255,255,255,0.04); border: 1.5px solid var(--border2);
+      border-radius: var(--r-sm); color: var(--text);
+      font-family: 'JetBrains Mono',monospace; font-size: 1rem;
+      letter-spacing: 0.3em; outline: none; margin-bottom: 0.85rem;
+      transition: border-color 0.2s, box-shadow 0.2s; text-align: center;
     }
-    .login-input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .login-input:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,142,247,0.15), 0 0 20px rgba(79,142,247,0.1);
+    }
     .login-btn {
-      width: 100%; padding: 0.9rem;
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-      color: #fff; border: none; border-radius: var(--radius-sm);
-      font-family: 'Space Grotesk', sans-serif; font-size: 1rem; font-weight: 700;
-      cursor: pointer; letter-spacing: 0.02em;
+      width: 100%; padding: 0.82rem;
+      background: linear-gradient(135deg,#4f8ef7,#3b6fd4);
+      color: #fff; border: none; border-radius: var(--r-sm);
+      font-family: 'Space Grotesk',sans-serif; font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; letter-spacing: 0.03em;
+      box-shadow: 0 4px 20px rgba(79,142,247,0.4);
       transition: opacity 0.2s, transform 0.1s, box-shadow 0.2s;
-      box-shadow: 0 4px 16px rgba(59,130,246,0.35);
     }
-    .login-btn:hover { opacity: 0.92; box-shadow: 0 6px 24px rgba(59,130,246,0.45); }
+    .login-btn:hover { opacity: 0.9; box-shadow: 0 6px 28px rgba(79,142,247,0.5); }
     .login-btn:active { transform: scale(0.98); }
-    .login-error { color: var(--red); font-size: 0.8rem; font-family: 'JetBrains Mono', monospace; margin-top: 0.7rem; min-height: 1.2rem; }
+    .login-err { color: var(--red); font-size: 0.75rem; font-family: 'JetBrains Mono',monospace; margin-top: 0.6rem; min-height: 1rem; }
 
-    /* APP */
-    #app { display: none; }
-    #app.visible { display: block; animation: fadeIn 0.4s ease; }
-    @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    /* ══ APP ══ */
+    #app { display: none; position: fixed; inset: 0; flex-direction: column; z-index: 1; }
+    #app.visible { display: flex; animation: fadeIn 0.4s ease; }
+    @keyframes fadeIn { from{opacity:0;}to{opacity:1;} }
 
-    /* HEADER */
+    /* ══ HEADER ══ */
     header {
+      height: var(--header-h); flex-shrink: 0;
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0.9rem 1.5rem;
-      background: rgba(8,11,18,0.85);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      position: sticky; top: 0; z-index: 100;
+      padding: 0 1.2rem;
+      background: rgba(7,9,15,0.92); backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border); z-index: 10;
     }
-    body.light header { background: rgba(241,245,251,0.9); }
+    body.light header { background: rgba(238,242,250,0.95); }
     .header-logo {
-      font-size: 0.9rem; font-weight: 700; letter-spacing: 0.1em; color: var(--accent);
-      font-family: 'JetBrains Mono', monospace;
-      display: flex; align-items: center; gap: 0.5rem;
+      font-size: 0.78rem; font-weight: 700; letter-spacing: 0.14em;
+      color: var(--accent); font-family: 'JetBrains Mono',monospace;
+      display: flex; align-items: center; gap: 0.45rem;
     }
-    .live-indicator {
-      width: 8px; height: 8px; border-radius: 50%; background: var(--green);
-      animation: pulse 2s infinite;
+    .live-dot {
+      width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+      box-shadow: 0 0 6px var(--green); animation: pulse 2s infinite;
     }
-    @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.3;} }
-    .header-right { display: flex; gap: 0.5rem; align-items: center; }
+    @keyframes pulse { 0%,100%{opacity:1;box-shadow:0 0 6px var(--green);}50%{opacity:0.3;box-shadow:none;} }
+    .hbtns { display: flex; gap: 0.35rem; }
     .hbtn {
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 0.45rem 0.9rem;
-      color: var(--text3); cursor: pointer; font-size: 0.82rem;
-      transition: all 0.2s; font-family: 'Space Grotesk', sans-serif; font-weight: 600;
+      border-radius: 7px; padding: 0.33rem 0.72rem;
+      color: var(--text3); cursor: pointer; font-size: 0.73rem;
+      font-family: 'Space Grotesk',sans-serif; font-weight: 600;
+      transition: all 0.18s;
     }
     .hbtn:hover { background: var(--surface2); border-color: var(--accent); color: var(--text); }
 
-    /* GRID */
-    main {
-      max-width: 1400px; margin: 0 auto;
-      padding: 1.2rem 1.2rem 3rem;
-      display: grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap: 1rem;
-    }
-    .col-3  { grid-column: span 3; }
-    .col-4  { grid-column: span 4; }
-    .col-6  { grid-column: span 6; }
-    .col-8  { grid-column: span 8; }
-    .col-12 { grid-column: span 12; }
-    @media (max-width: 1100px) {
-      .col-3 { grid-column: span 6; }
-      .col-4 { grid-column: span 6; }
-      .col-8 { grid-column: span 12; }
-    }
-    @media (max-width: 680px) {
-      main { grid-template-columns: 1fr; padding: 0.8rem; }
-      .col-3,.col-4,.col-6,.col-8,.col-12 { grid-column: span 1; }
-    }
+    /* ══ BODY ══ */
+    .body-area { flex: 1; display: flex; overflow: hidden; min-height: 0; }
 
-    /* CARD */
-    .card {
+    /* ══ SIDEBARS ══ */
+    .sidebar {
+      width: var(--sidebar-w); flex-shrink: 0;
+      display: flex; flex-direction: column;
+      overflow-y: auto; overflow-x: hidden;
+      padding: 0.7rem 0.6rem; gap: 0.3rem;
+      scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+    }
+    .sidebar::-webkit-scrollbar { width: 3px; }
+    .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    .sidebar-left { border-right: 1px solid var(--border); }
+    .sidebar-right { border-left: 1px solid var(--border); }
+
+    /* seção label */
+    .sec-label {
+      font-size: 0.52rem; font-family: 'JetBrains Mono',monospace;
+      letter-spacing: 0.18em; color: var(--text2); text-transform: uppercase;
+      padding: 0.15rem 0.2rem; margin-top: 0.4rem;
+      display: flex; align-items: center; gap: 0.35rem;
+    }
+    .sec-label::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, var(--border), transparent); }
+
+    /* botão lateral base */
+    .side-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.58rem 0.65rem; border-radius: var(--r-sm);
       background: var(--surface); border: 1px solid var(--border);
-      border-radius: var(--radius); padding: 1.4rem;
-      transition: border-color 0.25s, transform 0.2s, box-shadow 0.25s;
+      color: var(--text); font-family: 'Space Grotesk',sans-serif;
+      font-size: 0.92rem; font-weight: 600; cursor: pointer;
+      transition: all 0.18s; text-align: left; width: 100%;
+      text-decoration: none; position: relative; overflow: hidden;
+    }
+    .side-btn::before {
+      content: ''; position: absolute; left: 0; top: 0; bottom: 0;
+      width: 2px; background: var(--accent); opacity: 0;
+      transition: opacity 0.18s;
+    }
+    .side-btn:hover { background: var(--surface2); border-color: var(--border2); color: var(--text); transform: translateX(2px); }
+    .side-btn:hover::before { opacity: 1; }
+    .side-btn .si {
+      width: 28px; height: 28px; border-radius: 7px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; background: var(--surface2);
+      transition: background 0.18s;
+    }
+    .side-btn:hover .si { background: var(--surface3); }
+    .side-btn .st { display: flex; flex-direction: column; min-width: 0; }
+    .side-btn .sn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; font-size: 0.92rem; }
+    .side-btn .sd { font-size: 0.64rem; font-family: 'JetBrains Mono',monospace; color: var(--text2); margin-top: 1px; }
+
+    /* giro btn */
+    .giro-btn {
+      display: flex; align-items: center; gap: 0.5rem;
+      padding: 0.58rem 0.6rem; border-radius: var(--r-sm);
+      background: var(--surface); border: 1px solid var(--border);
+      cursor: pointer; transition: all 0.18s; text-align: left; width: 100%;
       position: relative; overflow: hidden;
     }
-    .card::before {
-      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, var(--border2), transparent);
+    .giro-btn::before {
+      content:''; position:absolute; left:0; top:0; bottom:0;
+      width:2px; opacity:0; transition:opacity 0.18s;
     }
-    .card:hover { border-color: var(--border2); transform: translateY(-1px); box-shadow: 0 8px 32px rgba(0,0,0,0.2); }
-    .clabel {
-      font-size: 0.62rem; font-family: 'JetBrains Mono', monospace;
-      letter-spacing: 0.14em; color: var(--text2);
-      text-transform: uppercase; margin-bottom: 0.9rem;
-      display: flex; align-items: center; gap: 0.4rem;
+    .giro-geo::before { background: #818cf8; }
+    .giro-fin::before { background: var(--green); }
+    .giro-btn:hover { background: var(--surface2); border-color: var(--border2); transform: translateX(2px); }
+    .giro-btn:hover::before { opacity: 1; }
+    .giro-ic {
+      width: 28px; height: 28px; border-radius: 8px; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center; font-size: 0.95rem;
     }
-    .clabel-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+    .geo-bg { background: rgba(129,140,248,0.15); }
+    .fin-bg { background: rgba(34,211,160,0.12); }
+    .giro-texts { display:flex; flex-direction:column; min-width:0; }
+    .giro-name { font-size: 0.92rem; font-weight: 700; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .giro-desc { font-size: 0.64rem; color: var(--text2); font-family: 'JetBrains Mono',monospace; margin-top: 1px; }
 
-    /* GRÊMIO */
-    .gremio-card { border-color: rgba(59,130,246,0.2); }
-    .gremio-card:hover { border-color: rgba(59,130,246,0.45); box-shadow: 0 8px 32px rgba(59,130,246,0.08); }
-    .gremio-top { display: flex; align-items: center; gap: 0.9rem; margin-bottom: 1.1rem; }
-    .gremio-badge {
-      width: 52px; height: 52px; border-radius: 14px; flex-shrink: 0;
-      background: linear-gradient(135deg, #1e40af, #1e3a8a);
-      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
-      box-shadow: 0 4px 16px rgba(30,64,175,0.4);
+    /* ══ CENTRO ══ */
+    .center {
+      flex: 1; display: flex; align-items: stretch; justify-content: center;
+      padding: 0.8rem; overflow: hidden; min-width: 0;
     }
-    .gremio-name { font-size: 1rem; font-weight: 700; letter-spacing: -0.01em; }
-    .gremio-sub { font-size: 0.72rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-top: 2px; }
-    .match-box {
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); padding: 0.9rem 1rem; margin-bottom: 0.9rem;
+
+    /* ══ BLOCO DE NOTAS ══ */
+    .notes-card {
+      width: 100%; display: flex; flex-direction: column;
+      border-radius: var(--r); border: 1px solid var(--note-border);
+      padding: 1rem; position: relative; overflow: hidden;
+      background: var(--note-bg);
+      box-shadow: 0 0 40px rgba(0,0,0,0.3);
     }
-    .match-comp { font-size: 0.58rem; font-family: 'JetBrains Mono', monospace; letter-spacing: 0.12em; color: var(--accent); text-transform: uppercase; margin-bottom: 0.6rem; }
-    .match-teams { display: flex; align-items: center; justify-content: space-between; font-weight: 700; font-size: 0.95rem; }
-    .match-vs { font-size: 0.65rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; }
-    .match-date { font-size: 0.68rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-top: 0.5rem; }
-    .standing-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.4rem 0; border-bottom: 1px solid var(--border); font-size: 0.8rem; }
-    .standing-item:last-child { border-bottom: none; }
-    .standing-pos { width: 30px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.72rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; flex-shrink: 0; }
-    .pos-danger { background: rgba(239,68,68,0.15); color: var(--red); }
-    .pos-ok     { background: rgba(59,130,246,0.12); color: var(--accent); }
-    .pos-win    { background: rgba(16,185,129,0.12); color: var(--green); }
-    .standing-name { flex: 1; font-weight: 500; }
-    .standing-badge { font-size: 0.6rem; font-family: 'JetBrains Mono', monospace; padding: 0.2rem 0.5rem; border-radius: 20px; font-weight: 600; }
-    .badge-danger { background: rgba(239,68,68,0.1); color: var(--red); }
-    .badge-ok     { background: rgba(59,130,246,0.1); color: var(--accent); }
-    .badge-win    { background: rgba(16,185,129,0.1); color: var(--green); }
-
-    /* PREÇOS */
-    .btc-card { border-color: rgba(247,147,26,0.2); }
-    .btc-card:hover { border-color: rgba(247,147,26,0.4); box-shadow: 0 8px 32px rgba(247,147,26,0.06); }
-    .usd-card { border-color: rgba(16,185,129,0.2); }
-    .usd-card:hover { border-color: rgba(16,185,129,0.4); box-shadow: 0 8px 32px rgba(16,185,129,0.06); }
-    .price-main { font-size: 2rem; font-weight: 700; letter-spacing: -0.03em; line-height: 1; margin: 0.2rem 0 0.4rem; font-family: 'JetBrains Mono', monospace; }
-    .price-btc { color: var(--btc); }
-    .price-usd { color: var(--green); }
-    .price-change { font-size: 0.82rem; font-family: 'JetBrains Mono', monospace; font-weight: 500; }
-    .up { color: var(--green); } .down { color: var(--red); }
-    .price-meta { display: grid; grid-template-columns: repeat(3,1fr); gap: 0.5rem; margin-top: 0.9rem; }
-    .meta-item { background: var(--surface2); border-radius: 8px; padding: 0.5rem 0.6rem; }
-    .meta-label { font-size: 0.58rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; letter-spacing: 0.08em; text-transform: uppercase; }
-    .meta-val { font-size: 0.8rem; font-weight: 600; margin-top: 2px; }
-    .live-tag { display: inline-flex; align-items: center; gap: 0.3rem; font-size: 0.6rem; font-family: 'JetBrains Mono', monospace; color: var(--text2); margin-top: 0.6rem; }
-    .live-tag::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
-
-    /* MENSAGENS */
-    .msg-btn {
-      width: 100%; padding: 0.85rem 1rem;
-      background: var(--surface2); border: 1px solid var(--border);
-      border-radius: var(--radius-sm); color: var(--text);
-      font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; font-weight: 600;
-      cursor: pointer; display: flex; align-items: center; gap: 0.8rem;
-      transition: all 0.2s; text-align: left; margin-bottom: 0.6rem;
+    body:not(.light) .notes-card {
+      --note-bg: #f0f4fb;
+      --note-border: #c5d0ea;
+      --note-text: #0d1426;
+      --note-text2: #4a5a7a;
+      --note-surface: #ffffff;
+      --note-surface2: #e8edf8;
+      --note-border2: #bcc9e4;
     }
-    .msg-btn:last-child { margin-bottom: 0; }
-    .msg-btn:hover { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateX(3px); box-shadow: 0 4px 16px rgba(59,130,246,0.3); }
-    .msg-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
-    .icon-tg { background: rgba(59,130,246,0.15); }
-    .icon-wa { background: rgba(16,185,129,0.15); }
-    .msg-btn:hover .msg-icon { background: rgba(255,255,255,0.15); }
-    .msg-texts { display: flex; flex-direction: column; }
-    .msg-name { font-weight: 700; }
-    .msg-desc { font-size: 0.65rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; margin-top: 1px; }
-    .msg-btn:hover .msg-desc { color: rgba(255,255,255,0.7); }
+    body.light .notes-card {
+      --note-bg: #0f1623;
+      --note-border: #1f2e48;
+      --note-text: #dde4f5;
+      --note-text2: #5a6a8a;
+      --note-surface: #172034;
+      --note-surface2: #1e2a42;
+      --note-border2: #2d4266;
+    }
+    .notes-header {
+      display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.7rem;
+    }
+    .notes-icon {
+      width: 28px; height: 28px; border-radius: 8px;
+      background: linear-gradient(135deg, var(--accent), #3b6fd4);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 10px rgba(79,142,247,0.35);
+    }
+    .notes-title {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.08em;
+      color: var(--note-text2); text-transform: uppercase;
+      font-family: 'JetBrains Mono',monospace;
+    }
 
-    /* GIRO */
-    .giro-card { cursor: pointer; }
-    .giro-card:hover { border-color: var(--accent); box-shadow: 0 8px 32px var(--accent-glow); }
-    .giro-icon-wrap { width: 48px; height: 48px; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin-bottom: 0.9rem; }
-    .geo-icon { background: rgba(99,102,241,0.15); }
-    .fin-icon { background: rgba(16,185,129,0.15); }
-    .giro-title { font-size: 1.1rem; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 0.4rem; }
-    .giro-desc { font-size: 0.75rem; color: var(--text2); line-height: 1.5; }
-    .giro-arrow { position: absolute; bottom: 1.2rem; right: 1.2rem; color: var(--text2); font-size: 1rem; transition: transform 0.2s, color 0.2s; }
-    .giro-card:hover .giro-arrow { transform: translate(2px,-2px); color: var(--accent); }
+    .notes-cols { flex: 1; display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; min-height: 0; }
+    .note-col { display: flex; flex-direction: column; min-height: 0; }
+    .col-label {
+      font-size: 0.58rem; font-family: 'JetBrains Mono',monospace;
+      letter-spacing: 0.12em; color: var(--note-text2); text-transform: uppercase;
+      margin-bottom: 0.42rem; display: flex; align-items: center; gap: 0.3rem;
+    }
+    .col-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink:0; }
 
-    /* NOTAS */
-    .notes-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; }
-    .ntab { padding: 0.4rem 1rem; border-radius: 8px; border: 1px solid var(--border); background: transparent; color: var(--text2); font-family: 'Space Grotesk', sans-serif; font-size: 0.8rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .ntab.active { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .ntab:not(.active):hover { border-color: var(--border2); color: var(--text); }
-    .note-panel { display: none; }
-    .note-panel.active { display: block; }
-    .note-textarea { width: 100%; min-height: 180px; background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 0.9rem; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 0.88rem; line-height: 1.6; resize: vertical; outline: none; transition: border-color 0.2s; }
-    .note-textarea:focus { border-color: var(--accent); }
-    .note-footer { display: flex; align-items: center; margin-top: 0.6rem; }
-    .note-save { padding: 0.4rem 1rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text2); font-family: 'Space Grotesk', sans-serif; font-size: 0.75rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
-    .note-save:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-    .note-saved { color: var(--green); font-size: 0.72rem; font-family: 'JetBrains Mono', monospace; margin-left: 0.5rem; opacity: 0; transition: opacity 0.3s; }
-    .note-saved.show { opacity: 1; }
-    .task-input-row { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; }
-    .task-input { flex: 1; padding: 0.6rem 0.9rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.2s; }
-    .task-input:focus { border-color: var(--accent); }
-    .task-add { padding: 0.6rem 1rem; background: var(--accent); border: none; border-radius: 8px; color: #fff; font-family: 'Space Grotesk', sans-serif; font-size: 0.85rem; font-weight: 700; cursor: pointer; transition: opacity 0.2s; }
-    .task-add:hover { opacity: 0.85; }
-    .task-list { display: flex; flex-direction: column; gap: 0.4rem; max-height: 200px; overflow-y: auto; }
-    .task-item { display: flex; align-items: center; gap: 0.7rem; padding: 0.55rem 0.8rem; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; transition: all 0.2s; }
-    .task-item.done { opacity: 0.5; }
-    .task-check { width: 18px; height: 18px; border-radius: 5px; border: 2px solid var(--border2); background: transparent; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
-    .task-item.done .task-check { background: var(--green); border-color: var(--green); }
-    .task-text { flex: 1; font-size: 0.82rem; }
-    .task-item.done .task-text { text-decoration: line-through; color: var(--text2); }
-    .task-del { background: none; border: none; color: var(--text2); cursor: pointer; font-size: 0.9rem; padding: 0.1rem 0.3rem; border-radius: 4px; transition: all 0.2s; }
-    .task-del:hover { background: rgba(239,68,68,0.15); color: var(--red); }
+    .note-textarea {
+      flex: 1; width: 100%;
+      background: var(--note-surface); border: 1px solid var(--note-border2);
+      border-radius: var(--r-sm); padding: 0.7rem 0.8rem;
+      color: var(--note-text); font-family: 'Space Grotesk',sans-serif;
+      font-size: 0.84rem; line-height: 1.65; resize: none; outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .note-textarea::placeholder { color: var(--note-text2); opacity:0.55; }
+    .note-textarea:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(79,142,247,0.12);
+    }
+    .note-footer { display:flex; align-items:center; gap:0.4rem; margin-top:0.38rem; }
+    .note-save {
+      padding: 0.28rem 0.75rem;
+      background: var(--note-surface2); border: 1px solid var(--note-border2);
+      border-radius: 6px; color: var(--note-text2);
+      font-family: 'Space Grotesk',sans-serif; font-size: 0.7rem; font-weight: 600;
+      cursor: pointer; transition: all 0.18s;
+    }
+    .note-save:hover { background: var(--accent); border-color: var(--accent); color:#fff; }
+    .note-saved { color:var(--green); font-size:0.62rem; font-family:'JetBrains Mono',monospace; opacity:0; transition:opacity 0.3s; }
+    .note-saved.show { opacity:1; }
 
-    /* MODAIS */
-    #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); z-index: 500; flex-direction: column; }
-    #modal-overlay.open { display: flex; }
-    #modal-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.7rem 1.2rem; display: flex; align-items: center; justify-content: space-between; }
-    #modal-title { font-size: 0.9rem; font-weight: 700; font-family: 'JetBrains Mono', monospace; }
-    #modal-close { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 0.4rem 1rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
-    #modal-frame { flex: 1; border: none; width: 100%; }
-    #giro-modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92); z-index: 600; flex-direction: column; }
-    #giro-modal.open { display: flex; }
-    #giro-bar { background: var(--surface); border-bottom: 1px solid var(--border); padding: 0.9rem 1.4rem; display: flex; align-items: center; justify-content: space-between; }
-    #giro-title { font-size: 1rem; font-weight: 700; color: var(--accent); }
-    #giro-close { background: var(--red); color: #fff; border: none; border-radius: 8px; padding: 0.4rem 1rem; font-family: 'Space Grotesk', sans-serif; font-weight: 700; cursor: pointer; }
-    #giro-content { flex: 1; overflow-y: auto; padding: 2rem; font-family: 'Space Grotesk', sans-serif; line-height: 1.8; font-size: 0.95rem; color: var(--text); max-width: 860px; margin: 0 auto; width: 100%; }
-    #giro-content h2 { font-size: 1.15rem; color: var(--accent); margin: 1.8rem 0 0.6rem; font-weight: 700; border-left: 3px solid var(--accent); padding-left: 0.8rem; }
-    #giro-content p { color: var(--text3); margin-bottom: 0.8rem; }
-    #giro-content strong { color: var(--text); }
-    .giro-loading { display: flex; align-items: center; justify-content: center; gap: 0.7rem; padding: 4rem; color: var(--text2); font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
-    .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
+    /* tasks */
+    .task-row { display:flex; gap:0.32rem; margin-bottom:0.42rem; }
+    .task-input {
+      flex:1; padding:0.42rem 0.65rem;
+      background:var(--note-surface); border:1px solid var(--note-border2);
+      border-radius:6px; color:var(--note-text);
+      font-family:'Space Grotesk',sans-serif; font-size:0.78rem; outline:none;
+      transition:border-color 0.2s;
+    }
+    .task-input::placeholder { color:var(--note-text2); opacity:0.55; }
+    .task-input:focus { border-color:var(--accent); }
+    .task-add {
+      padding:0.42rem 0.75rem; background:var(--accent); border:none;
+      border-radius:6px; color:#fff; font-weight:700; font-size:0.95rem;
+      cursor:pointer; transition:opacity 0.18s; line-height:1;
+    }
+    .task-add:hover { opacity:0.82; }
+    .task-list { display:flex; flex-direction:column; gap:0.28rem; overflow-y:auto; flex:1;
+      scrollbar-width:thin; scrollbar-color:var(--note-border2) transparent; }
+    .task-list::-webkit-scrollbar { width:3px; }
+    .task-list::-webkit-scrollbar-thumb { background:var(--note-border2); border-radius:3px; }
+    .task-item {
+      display:flex; align-items:center; gap:0.5rem;
+      padding:0.4rem 0.6rem; background:var(--note-surface);
+      border:1px solid var(--note-border2); border-radius:6px; transition:opacity 0.18s;
+    }
+    .task-item.done { opacity:0.4; }
+    .task-check {
+      width:15px; height:15px; border-radius:4px;
+      border:1.5px solid var(--note-border2); background:transparent;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      flex-shrink:0; transition:all 0.18s;
+    }
+    .task-item.done .task-check { background:var(--green); border-color:var(--green); }
+    .task-text { flex:1; font-size:0.76rem; color:var(--note-text); }
+    .task-item.done .task-text { text-decoration:line-through; color:var(--note-text2); }
+    .task-del { background:none; border:none; color:var(--note-text2); cursor:pointer; font-size:0.78rem; padding:0 0.12rem; border-radius:3px; transition:color 0.15s; }
+    .task-del:hover { color:var(--red); }
+    .tasks-empty { text-align:center; color:var(--note-text2); font-size:0.7rem; padding:1.2rem; font-family:'JetBrains Mono',monospace; opacity:0.7; }
+
+    /* ══ FOOTER ══ */
+    footer {
+      height: var(--footer-h); flex-shrink: 0;
+      display: flex; align-items: center;
+      padding: 0 0.9rem; gap: 0.6rem;
+      background: rgba(7,9,15,0.92); backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      overflow-x: auto; overflow-y: hidden;
+      scrollbar-width: none;
+    }
+    footer::-webkit-scrollbar { display:none; }
+    body.light footer { background: rgba(238,242,250,0.95); }
+
+    .gremio-chip {
+      display: flex; align-items: center; gap: 0.55rem;
+      background: var(--surface); border: 1px solid rgba(79,142,247,0.3);
+      border-radius: var(--r-sm); padding: 0.38rem 0.7rem;
+      flex-shrink: 0; white-space: nowrap;
+      box-shadow: 0 2px 12px rgba(79,142,247,0.08);
+    }
+    .g-badge {
+      width: 30px; height: 30px; border-radius: 8px;
+      background: linear-gradient(135deg,#1e40af,#1e3a8a);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+      box-shadow: 0 2px 8px rgba(30,64,175,0.4);
+    }
+    .g-info { display:flex; flex-direction:column; }
+    .g-comp { font-size:0.54rem; color:var(--text2); font-family:'JetBrains Mono',monospace; }
+    .g-match-txt { font-size:0.8rem; font-weight:700; line-height:1.2; }
+    .g-date { font-size:0.56rem; color:var(--text2); font-family:'JetBrains Mono',monospace; }
+    .g-sep { width:1px; background:var(--border); height:30px; flex-shrink:0; margin:0 0.1rem; }
+    .g-pills { display:flex; gap:0.35rem; align-items:center; }
+    .gpill {
+      font-size:0.55rem; font-family:'JetBrains Mono',monospace;
+      padding:0.15rem 0.45rem; border-radius:20px; font-weight:600; white-space:nowrap;
+    }
+    .pill-red   { background:rgba(242,87,87,0.12); color:var(--red); }
+    .pill-blue  { background:rgba(79,142,247,0.1); color:var(--accent); }
+    .pill-green { background:rgba(34,211,160,0.1); color:var(--green); }
+
+    .price-chip {
+      display:flex; flex-direction:column; justify-content:center;
+      background:var(--surface); border:1px solid var(--border);
+      border-radius:var(--r-sm); padding:0.32rem 0.65rem; flex-shrink:0;
+    }
+    .pc-label { font-size:0.5rem; font-family:'JetBrains Mono',monospace; color:var(--text2); letter-spacing:0.1em; text-transform:uppercase; }
+    .pc-val { font-size:0.92rem; font-weight:700; font-family:'JetBrains Mono',monospace; letter-spacing:-0.02em; line-height:1.25; }
+    .pc-btc { color:var(--btc); }
+    .pc-usd { color:var(--green); }
+    .pc-change { font-size:0.55rem; font-family:'JetBrains Mono',monospace; }
+    .up { color:var(--green); } .down { color:var(--red); }
+
+    /* ══ MODAIS ══ */
+    #modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.9); z-index:500; flex-direction:column; }
+    #modal-overlay.open { display:flex; }
+    #modal-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:0.58rem 1.1rem; display:flex; align-items:center; justify-content:space-between; }
+    #modal-title { font-size:0.82rem; font-weight:700; font-family:'JetBrains Mono',monospace; }
+    #modal-close { background:var(--red); color:#fff; border:none; border-radius:7px; padding:0.32rem 0.82rem; font-family:'Space Grotesk',sans-serif; font-weight:700; cursor:pointer; font-size:0.78rem; }
+    #modal-frame { flex:1; border:none; width:100%; }
+
+    #giro-modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.94); z-index:600; flex-direction:column; }
+    #giro-modal.open { display:flex; }
+    #giro-bar { background:var(--surface); border-bottom:1px solid var(--border); padding:0.72rem 1.3rem; display:flex; align-items:center; justify-content:space-between; }
+    #giro-title { font-size:0.92rem; font-weight:700; color:var(--accent); }
+    #giro-close { background:var(--red); color:#fff; border:none; border-radius:7px; padding:0.32rem 0.82rem; font-family:'Space Grotesk',sans-serif; font-weight:700; cursor:pointer; }
+    #giro-content { flex:1; overflow-y:auto; padding:2rem; font-family:'Space Grotesk',sans-serif; line-height:1.8; font-size:0.92rem; color:var(--text); max-width:800px; margin:0 auto; width:100%; }
+    #giro-content h2 { font-size:1.02rem; color:var(--accent); margin:1.5rem 0 0.45rem; font-weight:700; border-left:3px solid var(--accent); padding-left:0.72rem; }
+    #giro-content p { color:var(--text3); margin-bottom:0.65rem; }
+    #giro-content strong { color:var(--text); }
+    .giro-loading { display:flex; align-items:center; justify-content:center; gap:0.65rem; padding:4rem; color:var(--text2); font-family:'JetBrains Mono',monospace; font-size:0.78rem; }
+    .spinner { width:17px; height:17px; border:2px solid var(--border); border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite; }
+    @keyframes spin { to{transform:rotate(360deg);} }
+
+    @media(max-width:700px){
+      :root{ --sidebar-w:150px; }
+      .notes-cols { grid-template-columns:1fr; }
+    }
+    @media(max-width:500px){
+      .sidebar { display:none; }
+    }
   </style>
 </head>
 <body>
 
+<!-- MARCA D'ÁGUA -->
+<div class="watermark">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Gremio_logo.svg/500px-Gremio_logo.svg.png"
+       alt="Grêmio" style="width:100%;height:100%;object-fit:contain;"/>
+</div>
+
 <!-- LOGIN -->
 <div id="login-screen">
-  <div class="login-bg"></div>
   <div class="login-grid"></div>
+  <div class="login-glow"></div>
   <div class="login-box">
-    <div class="login-dot">🔐</div>
+    <div class="login-shield">
+      <svg viewBox="0 0 64 72" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="lg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#4f8ef7"/>
+            <stop offset="100%" stop-color="#1d4ed8"/>
+          </linearGradient>
+        </defs>
+        <path d="M32 2 L60 14 L60 42 Q60 62 32 70 Q4 62 4 42 L4 14 Z" fill="url(#lg)" opacity="0.9"/>
+        <path d="M32 2 L60 14 L60 42 Q60 62 32 70 Q4 62 4 42 L4 14 Z" fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="1"/>
+        <text x="32" y="44" text-anchor="middle" font-size="22" fill="white" opacity="0.95">🔐</text>
+      </svg>
+    </div>
     <div class="login-title">Acesso Restrito</div>
     <div class="login-sub">sednemrogi.tech · painel pessoal</div>
-    <input type="password" id="pwd-input" class="login-input" placeholder="••••••••" onkeydown="if(event.key==='Enter') doLogin()" autofocus/>
-    <button class="login-btn" onclick="doLogin()">Entrar</button>
-    <div class="login-error" id="login-err"></div>
+    <input type="password" id="pwd-input" class="login-input" placeholder="••••••••"
+           onkeydown="if(event.key==='Enter')doLogin()" autofocus/>
+    <button class="login-btn" onclick="doLogin()">Entrar no Painel</button>
+    <div class="login-err" id="login-err"></div>
   </div>
 </div>
 
 <!-- APP -->
 <div id="app">
+
   <header>
-    <div class="header-logo">
-      <div class="live-indicator"></div>
-      SEDNEMROGI.TECH
-    </div>
-    <div class="header-right">
+    <div class="header-logo"><div class="live-dot"></div>SEDNEMROGI.TECH</div>
+    <div class="hbtns">
       <button class="hbtn" onclick="toggleTheme()" id="theme-btn">🌙 Escuro</button>
       <button class="hbtn" onclick="doLogout()">🔒 Sair</button>
     </div>
   </header>
 
-  <main>
+  <div class="body-area">
 
-    <!-- GRÊMIO -->
-    <div class="card gremio-card col-4">
-      <div class="clabel"><span class="clabel-dot"></span>Próximo Jogo</div>
-      <div class="gremio-top">
-        <div class="gremio-badge">⚽</div>
-        <div>
-          <div class="gremio-name">Grêmio FBPA</div>
-          <div class="gremio-sub">Tricolor Gaúcho</div>
-        </div>
-      </div>
-      <div class="match-box">
-        <div class="match-comp">🏆 Copa Betano do Brasil 2026</div>
-        <div class="match-teams">
-          <span>Confiança</span>
-          <span class="match-vs">vs</span>
-          <span style="color:var(--gremio)">Grêmio</span>
-        </div>
-        <div class="match-date">📅 14/05/2026 · 19h00 · Horário de Brasília</div>
-      </div>
-      <div class="clabel"><span class="clabel-dot"></span>Situação nos Campeonatos</div>
-      <div class="standing-item">
-        <div class="standing-pos pos-danger">17º</div>
-        <div class="standing-name">Brasileirão Série A</div>
-        <div class="standing-badge badge-danger">⚠ Z-4 · Rod.15</div>
-      </div>
-      <div class="standing-item">
-        <div class="standing-pos pos-ok">—</div>
-        <div class="standing-name">Copa do Brasil</div>
-        <div class="standing-badge badge-ok">Em disputa</div>
-      </div>
-      <div class="standing-item">
-        <div class="standing-pos pos-ok">—</div>
-        <div class="standing-name">Sul-Americana</div>
-        <div class="standing-badge badge-ok">Em disputa</div>
-      </div>
-      <div class="standing-item">
-        <div class="standing-pos pos-win">🏆</div>
-        <div class="standing-name">Gauchão 2026</div>
-        <div class="standing-badge badge-win">Campeão ✓</div>
-      </div>
-    </div>
+    <!-- ══ SIDEBAR ESQUERDA ══ -->
+    <aside class="sidebar sidebar-left">
 
-    <!-- BTC -->
-    <div class="card btc-card col-4">
-      <div class="clabel"><span class="clabel-dot" style="background:var(--btc)"></span>Bitcoin · USD</div>
-      <div class="price-main price-btc" id="btc-price">—</div>
-      <div class="price-change" id="btc-change">carregando...</div>
-      <div class="price-meta">
-        <div class="meta-item"><div class="meta-label">24h Max</div><div class="meta-val" id="btc-high">—</div></div>
-        <div class="meta-item"><div class="meta-label">24h Min</div><div class="meta-val" id="btc-low">—</div></div>
-        <div class="meta-item"><div class="meta-label">Volume</div><div class="meta-val" id="btc-vol">—</div></div>
-      </div>
-      <div class="live-tag" id="btc-updated">aguardando...</div>
-    </div>
+      <div class="sec-label">Mensagens</div>
+      <button class="side-btn" onclick="openModal('https://web.telegram.org','✈️ Telegram Web')">
+        <span class="si">✈️</span>
+        <span class="st"><span class="sn">Telegram</span><span class="sd">web.telegram.org</span></span>
+      </button>
+      <button class="side-btn" onclick="openModal('https://web.whatsapp.com','💬 WhatsApp Web')">
+        <span class="si">💬</span>
+        <span class="st"><span class="sn">WhatsApp</span><span class="sd">web.whatsapp.com</span></span>
+      </button>
 
-    <!-- USD/BRL -->
-    <div class="card usd-card col-4">
-      <div class="clabel"><span class="clabel-dot" style="background:var(--green)"></span>Dólar · BRL</div>
-      <div class="price-main price-usd" id="usd-price">—</div>
-      <div class="price-change" id="usd-change">carregando...</div>
-      <div class="price-meta">
-        <div class="meta-item"><div class="meta-label">Compra</div><div class="meta-val" id="usd-buy">—</div></div>
-        <div class="meta-item"><div class="meta-label">Venda</div><div class="meta-val" id="usd-sell">—</div></div>
-        <div class="meta-item"><div class="meta-label">Fonte</div><div class="meta-val" style="font-size:0.68rem">AwesomeAPI</div></div>
-      </div>
-      <div class="live-tag" id="usd-updated">aguardando...</div>
-    </div>
-
-    <!-- MENSAGENS -->
-    <div class="card col-3">
-      <div class="clabel"><span class="clabel-dot"></span>Mensagens</div>
-      <button class="msg-btn" onclick="openModal('https://web.telegram.org','✈️ Telegram Web')">
-        <div class="msg-icon icon-tg">✈️</div>
-        <div class="msg-texts">
-          <span class="msg-name">Telegram Web</span>
-          <span class="msg-desc">abre no painel · fecha junto</span>
+      <div class="sec-label">Análises IA</div>
+      <button class="giro-btn giro-geo" onclick="openGiro('geo')">
+        <div class="giro-ic geo-bg">🌍</div>
+        <div class="giro-texts">
+          <span class="giro-name">Giro Geopolítico</span>
+          <span class="giro-desc">análise global · IA</span>
         </div>
       </button>
-      <button class="msg-btn" onclick="openModal('https://web.whatsapp.com','💬 WhatsApp Web')">
-        <div class="msg-icon icon-wa">💬</div>
-        <div class="msg-texts">
-          <span class="msg-name">WhatsApp Web</span>
-          <span class="msg-desc">abre no painel · fecha junto</span>
+      <button class="giro-btn giro-fin" onclick="openGiro('fin')">
+        <div class="giro-ic fin-bg">📈</div>
+        <div class="giro-texts">
+          <span class="giro-name">Giro Financeiro</span>
+          <span class="giro-desc">mercados · IA</span>
         </div>
       </button>
-    </div>
 
-    <!-- GIRO GEO -->
-    <div class="card giro-card col-3" onclick="openGiro('geo')">
-      <div class="clabel"><span class="clabel-dot" style="background:#818cf8"></span>IA · Geopolítica</div>
-      <div class="giro-icon-wrap geo-icon">🌍</div>
-      <div class="giro-title">Giro Geopolítico</div>
-      <div class="giro-desc">Análise das principais movimentações geopolíticas globais, gerada por IA em tempo real.</div>
-      <div class="giro-arrow">↗</div>
-    </div>
+      <div class="sec-label">E-mails</div>
+      <a class="side-btn" href="https://outlook.live.com" target="_blank" rel="noopener">
+        <span class="si">📧</span>
+        <span class="st"><span class="sn">Hotmail</span><span class="sd">outlook.live.com</span></span>
+      </a>
+      <a class="side-btn" href="https://mail.google.com" target="_blank" rel="noopener">
+        <span class="si">📩</span>
+        <span class="st"><span class="sn">Gmail</span><span class="sd">mail.google.com</span></span>
+      </a>
+      <a class="side-btn" href="https://drive.google.com" target="_blank" rel="noopener">
+        <span class="si">☁️</span>
+        <span class="st"><span class="sn">Google Drive</span><span class="sd">drive.google.com</span></span>
+      </a>
+      <a class="side-btn" href="https://ebmail.webmail.eb.mil.br/" target="_blank" rel="noopener">
+        <span class="si">🎖️</span>
+        <span class="st"><span class="sn">EBMail</span><span class="sd">eb.mil.br</span></span>
+      </a>
+      <a class="side-btn" href="https://www.darkemail.school/pt" target="_blank" rel="noopener">
+        <span class="si">🌑</span>
+        <span class="st"><span class="sn">Darkemail School</span><span class="sd">darkemail.school</span></span>
+      </a>
 
-    <!-- GIRO FIN -->
-    <div class="card giro-card col-3" onclick="openGiro('fin')">
-      <div class="clabel"><span class="clabel-dot" style="background:var(--green)"></span>IA · Mercados</div>
-      <div class="giro-icon-wrap fin-icon">📈</div>
-      <div class="giro-title">Giro Financeiro</div>
-      <div class="giro-desc">Panorama dos mercados financeiros e economia global, gerado por IA em tempo real.</div>
-      <div class="giro-arrow">↗</div>
-    </div>
+      <div class="sec-label">Música</div>
+      <a class="side-btn" href="https://open.spotify.com" target="_blank" rel="noopener">
+        <span class="si">🎵</span>
+        <span class="st"><span class="sn">Spotify</span><span class="sd">open.spotify.com</span></span>
+      </a>
 
-    <!-- NOTAS + TAREFAS -->
-    <div class="card col-3">
-      <div class="clabel"><span class="clabel-dot" style="background:var(--accent2)"></span>Bloco de Notas</div>
-      <div class="notes-tabs">
-        <button class="ntab active" onclick="switchTab('notes')">📝 Notas</button>
-        <button class="ntab" onclick="switchTab('tasks')">✅ Missões</button>
-      </div>
-      <div class="note-panel active" id="panel-notes">
-        <textarea class="note-textarea" id="note-text" placeholder="Suas anotações aqui..."></textarea>
-        <div class="note-footer">
-          <button class="note-save" onclick="saveNote()">💾 Salvar</button>
-          <span class="note-saved" id="note-saved">✓ salvo</span>
+    </aside>
+
+    <!-- ══ CENTRO ══ -->
+    <div class="center">
+      <div class="notes-card">
+        <div class="notes-header">
+          <div class="notes-icon">📝</div>
+          <div class="notes-title">Bloco de Notas</div>
+        </div>
+        <div class="notes-cols">
+          <div class="note-col">
+            <div class="col-label">
+              <span class="col-dot" style="background:#4f8ef7"></span>
+              📝 Notas
+            </div>
+            <textarea class="note-textarea" id="note-text" placeholder="Suas anotações aqui..."></textarea>
+            <div class="note-footer">
+              <button class="note-save" onclick="saveNote()">💾 Salvar</button>
+              <span class="note-saved" id="note-saved">✓ salvo</span>
+            </div>
+          </div>
+          <div class="note-col">
+            <div class="col-label">
+              <span class="col-dot" style="background:#22d3a0"></span>
+              ✅ Missões
+            </div>
+            <div class="task-row">
+              <input type="text" class="task-input" id="task-input"
+                     placeholder="Nova missão..."
+                     onkeydown="if(event.key==='Enter')addTask()"/>
+              <button class="task-add" onclick="addTask()">+</button>
+            </div>
+            <div class="task-list" id="task-list"></div>
+          </div>
         </div>
       </div>
-      <div class="note-panel" id="panel-tasks">
-        <div class="task-input-row">
-          <input type="text" class="task-input" id="task-input" placeholder="Nova missão..." onkeydown="if(event.key==='Enter') addTask()"/>
-          <button class="task-add" onclick="addTask()">+</button>
-        </div>
-        <div class="task-list" id="task-list"></div>
-      </div>
     </div>
 
-  </main>
-</div>
+    <!-- ══ SIDEBAR DIREITA ══ -->
+    <aside class="sidebar sidebar-right">
+
+      <div class="sec-label">Nacionais</div>
+      <a class="side-btn" href="https://www.xpi.com.br" target="_blank" rel="noopener">
+        <span class="si">🇧🇷</span>
+        <span class="st"><span class="sn">XP Investimentos</span><span class="sd">xpi.com.br</span></span>
+      </a>
+      <a class="side-btn" href="https://www.clear.com.br" target="_blank" rel="noopener">
+        <span class="si">🇧🇷</span>
+        <span class="st"><span class="sn">Clear Corretora</span><span class="sd">clear.com.br</span></span>
+      </a>
+
+      <div class="sec-label">Plataformas</div>
+      <a class="side-btn" href="https://grupoglobal.circle.so/home#email" target="_blank" rel="noopener">
+        <span class="si">🌐</span>
+        <span class="st"><span class="sn">Global</span><span class="sd">grupoglobal.circle.so</span></span>
+      </a>
+      <a class="side-btn" href="https://myprofitweb.com/Login.aspx?expired=1&redirect=https://myprofitweb.com/App/Index.aspx?tagmd=premium" target="_blank" rel="noopener">
+        <span class="si">💹</span>
+        <span class="st"><span class="sn">Myprofit</span><span class="sd">myprofitweb.com</span></span>
+      </a>
+
+      <div class="sec-label">Estrangeiras</div>
+      <a class="side-btn" href="https://www.schwab.com" target="_blank" rel="noopener">
+        <span class="si">🇺🇸</span>
+        <span class="st"><span class="sn">Charles Schwab</span><span class="sd">schwab.com</span></span>
+      </a>
+      <a class="side-btn" href="https://www.interactivebrokers.com" target="_blank" rel="noopener">
+        <span class="si">🇺🇸</span>
+        <span class="st"><span class="sn">Interactive Brokers</span><span class="sd">ibkr.com</span></span>
+      </a>
+
+      <div class="sec-label">IAs</div>
+      <a class="side-btn" href="https://claude.ai" target="_blank" rel="noopener">
+        <span class="si">🤖</span>
+        <span class="st"><span class="sn">Claude</span><span class="sd">claude.ai</span></span>
+      </a>
+      <a class="side-btn" href="https://notebooklm.google.com" target="_blank" rel="noopener">
+        <span class="si">📓</span>
+        <span class="st"><span class="sn">NotebookLM</span><span class="sd">notebooklm.google.com</span></span>
+      </a>
+      <a class="side-btn" href="https://gemini.google.com" target="_blank" rel="noopener">
+        <span class="si">✨</span>
+        <span class="st"><span class="sn">Gemini</span><span class="sd">gemini.google.com</span></span>
+      </a>
+      <a class="side-btn" href="https://www.perplexity.ai" target="_blank" rel="noopener">
+        <span class="si">🔍</span>
+        <span class="st"><span class="sn">Perplexity</span><span class="sd">perplexity.ai</span></span>
+      </a>
+
+    </aside>
+
+  </div><!-- /body-area -->
+
+  <!-- ══ FOOTER ══ -->
+  <footer>
+    <div class="gremio-chip">
+      <div class="g-badge">⚽</div>
+      <div class="g-info">
+        <div class="g-comp">Copa Betano do Brasil 2026</div>
+        <div class="g-match-txt">Confiança <span style="color:var(--accent)">vs Grêmio</span></div>
+        <div class="g-date">📅 14/05/2026 · 19h00 · Brasília</div>
+      </div>
+      <div class="g-sep"></div>
+      <div class="g-pills">
+        <span class="gpill pill-red">⚠ 17º Z-4</span>
+        <span class="gpill pill-blue">Copa BR</span>
+        <span class="gpill pill-blue">Sul-Am</span>
+        <span class="gpill pill-green">🏆 Gauchão</span>
+      </div>
+    </div>
+    <div class="price-chip">
+      <div class="pc-label">₿ Bitcoin · USD</div>
+      <div class="pc-val pc-btc" id="btc-price">—</div>
+      <div class="pc-change" id="btc-change">...</div>
+    </div>
+    <div class="price-chip">
+      <div class="pc-label">$ Dólar · BRL</div>
+      <div class="pc-val pc-usd" id="usd-price">—</div>
+      <div class="pc-change" id="usd-change">...</div>
+    </div>
+  </footer>
+
+</div><!-- /app -->
 
 <!-- MODAL IFRAME -->
 <div id="modal-overlay">
@@ -486,7 +672,7 @@
     <span id="modal-title"></span>
     <button id="modal-close" onclick="closeModal()">✕ Fechar</button>
   </div>
-  <iframe id="modal-frame" src="" allow="camera; microphone; notifications"></iframe>
+  <iframe id="modal-frame" src="" allow="camera;microphone;notifications"></iframe>
 </div>
 
 <!-- MODAL GIRO -->
@@ -496,7 +682,7 @@
     <button id="giro-close" onclick="closeGiro()">✕ Fechar</button>
   </div>
   <div id="giro-content">
-    <div class="giro-loading"><div class="spinner"></div> Gerando análise...</div>
+    <div class="giro-loading"><div class="spinner"></div> Gerando análise com IA...</div>
   </div>
 </div>
 
@@ -504,171 +690,124 @@
 const SENHA = 'Estel@2023';
 let API_KEY = '';
 
-function doLogin() {
+function doLogin(){
   const v = document.getElementById('pwd-input').value;
-  if (v === SENHA) {
-    API_KEY = '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';
-    document.getElementById('login-screen').style.display = 'none';
+  if(v === SENHA){
+    API_KEY = atob('c2stYW50LWFwaTAzLVljV252Z0QwT00zMVVMQUM1UkdYSGRwQVQ1S0VIa0N1QTlqQWV1TXBzWU96eXZ5VHl2S2c0UXRzVkpnVWpDXzY4WXZxNVpBMkIyaVJpWVlscEwtYmctdHFVZ1RBQUE=');
+    document.getElementById('login-screen').style.display='none';
     document.getElementById('app').classList.add('visible');
     initApp();
   } else {
-    document.getElementById('login-err').textContent = 'Senha incorreta.';
-    document.getElementById('pwd-input').value = '';
+    document.getElementById('login-err').textContent='Senha incorreta.';
+    document.getElementById('pwd-input').value='';
     document.getElementById('pwd-input').focus();
   }
 }
-function doLogout() {
-  API_KEY = '';
+function doLogout(){
+  API_KEY='';
   document.getElementById('app').classList.remove('visible');
-  document.getElementById('login-screen').style.display = 'flex';
-  document.getElementById('pwd-input').value = '';
-  document.getElementById('login-err').textContent = '';
+  document.getElementById('login-screen').style.display='flex';
+  document.getElementById('pwd-input').value='';
+  document.getElementById('login-err').textContent='';
 }
 
-let darkMode = true;
-function toggleTheme() {
-  darkMode = !darkMode;
-  document.body.classList.toggle('light', !darkMode);
-  document.getElementById('theme-btn').textContent = darkMode ? '🌙 Escuro' : '☀️ Claro';
+let darkMode=true;
+function toggleTheme(){
+  darkMode=!darkMode;
+  document.body.classList.toggle('light',!darkMode);
+  document.getElementById('theme-btn').textContent=darkMode?'🌙 Escuro':'☀️ Claro';
 }
 
-async function fetchBTC() {
-  try {
-    const r = await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
-    const d = await r.json();
-    const price = parseFloat(d.lastPrice);
-    const change = parseFloat(d.priceChangePercent);
-    document.getElementById('btc-price').textContent = '$'+price.toLocaleString('en-US',{minimumFractionDigits:2,maximumFractionDigits:2});
-    const chEl = document.getElementById('btc-change');
-    chEl.textContent = (change>=0?'▲ +':'▼ ')+change.toFixed(2)+'% (24h)';
-    chEl.className = 'price-change '+(change>=0?'up':'down');
-    document.getElementById('btc-high').textContent = '$'+parseFloat(d.highPrice).toLocaleString('en-US',{maximumFractionDigits:0});
-    document.getElementById('btc-low').textContent  = '$'+parseFloat(d.lowPrice).toLocaleString('en-US',{maximumFractionDigits:0});
-    document.getElementById('btc-vol').textContent  = parseFloat(d.volume).toLocaleString('en-US',{maximumFractionDigits:0});
-    document.getElementById('btc-updated').textContent = 'Atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  } catch(e) { document.getElementById('btc-change').textContent = 'Erro ao carregar'; }
+async function fetchBTC(){
+  try{
+    const r=await fetch('https://api.binance.com/api/v3/ticker/24hr?symbol=BTCUSDT');
+    const d=await r.json();
+    const price=parseFloat(d.lastPrice), change=parseFloat(d.priceChangePercent);
+    document.getElementById('btc-price').textContent='$'+price.toLocaleString('en-US',{maximumFractionDigits:0});
+    const el=document.getElementById('btc-change');
+    el.textContent=(change>=0?'▲ +':'▼ ')+change.toFixed(2)+'%';
+    el.className='pc-change '+(change>=0?'up':'down');
+  }catch(e){}
 }
 
-async function fetchUSD() {
-  try {
-    const r = await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
-    const d = await r.json();
-    const rate = parseFloat(d.USDBRL.bid);
-    const pct  = parseFloat(d.USDBRL.pctChange);
-    document.getElementById('usd-price').textContent = 'R$ '+rate.toLocaleString('pt-BR',{minimumFractionDigits:4,maximumFractionDigits:4});
-    const chEl = document.getElementById('usd-change');
-    chEl.textContent = (pct>=0?'▲ +':'▼ ')+pct.toFixed(2)+'% hoje';
-    chEl.className = 'price-change '+(pct>=0?'up':'down');
-    document.getElementById('usd-buy').textContent  = 'R$ '+parseFloat(d.USDBRL.bid).toFixed(4);
-    document.getElementById('usd-sell').textContent = 'R$ '+parseFloat(d.USDBRL.ask).toFixed(4);
-    document.getElementById('usd-updated').textContent = 'Atualizado às '+new Date().toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'});
-  } catch(e) { document.getElementById('usd-change').textContent = 'Erro ao carregar'; }
+async function fetchUSD(){
+  try{
+    const r=await fetch('https://economia.awesomeapi.com.br/json/last/USD-BRL');
+    const d=await r.json();
+    const rate=parseFloat(d.USDBRL.bid), pct=parseFloat(d.USDBRL.pctChange);
+    document.getElementById('usd-price').textContent='R$ '+rate.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});
+    const el=document.getElementById('usd-change');
+    el.textContent=(pct>=0?'▲ +':'▼ ')+pct.toFixed(2)+'%';
+    el.className='pc-change '+(pct>=0?'up':'down');
+  }catch(e){}
 }
 
-function openModal(url, title) {
-  document.getElementById('modal-title').textContent = title;
-  document.getElementById('modal-frame').src = url;
+function openModal(url,title){
+  document.getElementById('modal-title').textContent=title;
+  document.getElementById('modal-frame').src=url;
   document.getElementById('modal-overlay').classList.add('open');
 }
-function closeModal() {
+function closeModal(){
   document.getElementById('modal-overlay').classList.remove('open');
-  document.getElementById('modal-frame').src = '';
+  document.getElementById('modal-frame').src='';
 }
 
-async function openGiro(tipo) {
-  const modal = document.getElementById('giro-modal');
-  const title = document.getElementById('giro-title');
-  const content = document.getElementById('giro-content');
-  modal.classList.add('open');
-  const isGeo = tipo === 'geo';
-  title.textContent = isGeo ? '🌍 Giro Geopolítico' : '📈 Giro Financeiro';
-  content.innerHTML = '<div class="giro-loading"><div class="spinner"></div> Gerando análise com IA...</div>';
-  const prompt = isGeo
-    ? `Você é um analista geopolítico sênior. Produza um GIRO GEOPOLÍTICO detalhado e atualizado (maio de 2026). Cubra: tensões EUA-China, conflito Rússia-Ucrânia, Oriente Médio, América Latina, eleições relevantes e diplomacia global. Use HTML simples com <h2> para seções e <p> para parágrafos. Use <strong> para destacar pontos-chave. Responda em português brasileiro.`
-    : `Você é um analista financeiro sênior. Produza um GIRO FINANCEIRO detalhado (maio de 2026). Cubra: bolsas globais (S&P 500, Nasdaq, Bovespa), dólar/real, commodities (petróleo, ouro, soja), criptomoedas (BTC, ETH), juros Fed e Banco Central Brasil. Use HTML simples com <h2> para seções e <p> para parágrafos. Use <strong> para dados importantes. Responda em português brasileiro.`;
-  try {
-    const resp = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': API_KEY,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-20250514',
-        max_tokens: 1000,
-        messages: [{ role: 'user', content: prompt }]
-      })
+async function openGiro(tipo){
+  document.getElementById('giro-modal').classList.add('open');
+  const isGeo=tipo==='geo';
+  document.getElementById('giro-title').textContent=isGeo?'🌍 Giro Geopolítico':'📈 Giro Financeiro';
+  document.getElementById('giro-content').innerHTML='<div class="giro-loading"><div class="spinner"></div> Gerando análise com IA...</div>';
+  const prompt=isGeo
+    ?`Você é um analista geopolítico sênior. Produza um GIRO GEOPOLÍTICO detalhado (maio 2026). Cubra: tensões EUA-China, Rússia-Ucrânia, Oriente Médio, América Latina, eleições e diplomacia global. Use HTML com <h2> para seções, <p> para parágrafos, <strong> para destaques. Português brasileiro.`
+    :`Você é um analista financeiro sênior. Produza um GIRO FINANCEIRO detalhado (maio 2026). Cubra: S&P 500, Nasdaq, Bovespa, USD/BRL, petróleo, ouro, BTC, ETH, juros Fed e Banco Central, inflação. Use HTML com <h2> para seções, <p> para parágrafos, <strong> para dados. Português brasileiro.`;
+  try{
+    const resp=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','x-api-key':API_KEY,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({model:'claude-sonnet-4-20250514',max_tokens:1000,messages:[{role:'user',content:prompt}]})
     });
-    const data = await resp.json();
-    const text = data.content?.map(b => b.text||'').join('') || 'Erro ao gerar análise.';
-    content.innerHTML = text;
-  } catch(e) {
-    content.innerHTML = '<p style="color:var(--red)">Erro ao conectar. Verifique sua conexão.</p>';
+    const data=await resp.json();
+    document.getElementById('giro-content').innerHTML=data.content?.map(b=>b.text||'').join('')||'Erro.';
+  }catch(e){
+    document.getElementById('giro-content').innerHTML='<p style="color:var(--red)">Erro de conexão.</p>';
   }
 }
-function closeGiro() { document.getElementById('giro-modal').classList.remove('open'); }
+function closeGiro(){ document.getElementById('giro-modal').classList.remove('open'); }
 
-function switchTab(tab) {
-  document.querySelectorAll('.ntab').forEach((t,i) => t.classList.toggle('active',(i===0&&tab==='notes')||(i===1&&tab==='tasks')));
-  document.getElementById('panel-notes').classList.toggle('active', tab==='notes');
-  document.getElementById('panel-tasks').classList.toggle('active', tab==='tasks');
+function saveNote(){
+  localStorage.setItem('sednem_note',document.getElementById('note-text').value);
+  const s=document.getElementById('note-saved');
+  s.classList.add('show'); setTimeout(()=>s.classList.remove('show'),2000);
 }
-
-function saveNote() {
-  localStorage.setItem('sednem_note', document.getElementById('note-text').value);
-  const s = document.getElementById('note-saved');
-  s.classList.add('show');
-  setTimeout(()=>s.classList.remove('show'), 2000);
-}
-function loadNote() {
-  const saved = localStorage.getItem('sednem_note');
-  if (saved) document.getElementById('note-text').value = saved;
+function loadNote(){
+  const v=localStorage.getItem('sednem_note'); if(v) document.getElementById('note-text').value=v;
 }
 
-let tasks = [];
-function loadTasks() {
-  const saved = localStorage.getItem('sednem_tasks');
-  if (saved) tasks = JSON.parse(saved);
-  renderTasks();
+let tasks=[];
+function loadTasks(){
+  const v=localStorage.getItem('sednem_tasks'); if(v) tasks=JSON.parse(v); renderTasks();
 }
-function saveTasks() { localStorage.setItem('sednem_tasks', JSON.stringify(tasks)); }
-function addTask() {
-  const input = document.getElementById('task-input');
-  const text = input.value.trim();
-  if (!text) return;
-  tasks.unshift({ id: Date.now(), text, done: false });
-  input.value = ''; saveTasks(); renderTasks();
+function saveTasks(){ localStorage.setItem('sednem_tasks',JSON.stringify(tasks)); }
+function addTask(){
+  const inp=document.getElementById('task-input'), t=inp.value.trim(); if(!t) return;
+  tasks.unshift({id:Date.now(),text:t,done:false}); inp.value=''; saveTasks(); renderTasks();
 }
-function toggleTask(id) {
-  const t = tasks.find(t=>t.id===id);
-  if (t) t.done = !t.done;
-  saveTasks(); renderTasks();
-}
-function deleteTask(id) {
-  tasks = tasks.filter(t=>t.id!==id);
-  saveTasks(); renderTasks();
-}
-function renderTasks() {
-  const list = document.getElementById('task-list');
-  if (!tasks.length) {
-    list.innerHTML = '<div style="text-align:center;color:var(--text2);font-size:0.78rem;padding:1.5rem;font-family:JetBrains Mono,monospace">Nenhuma missão ainda</div>';
-    return;
-  }
-  list.innerHTML = tasks.map(t=>`
-    <div class="task-item ${t.done?'done':''}">
-      <div class="task-check" onclick="toggleTask(${t.id})">${t.done?'<span style="color:#fff;font-size:0.65rem;font-weight:700;line-height:1">✓</span>':''}</div>
+function toggleTask(id){ const t=tasks.find(t=>t.id===id); if(t) t.done=!t.done; saveTasks(); renderTasks(); }
+function deleteTask(id){ tasks=tasks.filter(t=>t.id!==id); saveTasks(); renderTasks(); }
+function renderTasks(){
+  const l=document.getElementById('task-list');
+  if(!tasks.length){l.innerHTML='<div class="tasks-empty">Nenhuma missão ainda</div>';return;}
+  l.innerHTML=tasks.map(t=>`
+    <div class="task-item${t.done?' done':''}">
+      <div class="task-check" onclick="toggleTask(${t.id})">${t.done?'<span style="color:#fff;font-size:0.58rem;font-weight:700;line-height:1">✓</span>':''}</div>
       <span class="task-text">${t.text}</span>
       <button class="task-del" onclick="deleteTask(${t.id})">✕</button>
-    </div>
-  `).join('');
+    </div>`).join('');
 }
 
-function initApp() {
+function initApp(){
   fetchBTC(); fetchUSD(); loadNote(); loadTasks();
-  setInterval(fetchBTC, 30000);
-  setInterval(fetchUSD, 60000);
+  setInterval(fetchBTC,30000); setInterval(fetchUSD,60000);
 }
 </script>
 </body>
