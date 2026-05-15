@@ -26,7 +26,7 @@
       --r-sm: 8px;
       --header-h: 46px;
       --footer-h: 58px;
-      --sidebar-w: 224px;
+      --sidebar-w: 236px;
     }
     body.light {
       --bg: #eef2fa;
@@ -52,12 +52,11 @@
       position: fixed;
       top: 50%; left: 50%;
       transform: translate(-50%, -50%);
-      width: min(480px, 50vw);
-      height: min(480px, 50vw);
+      width: min(500px, 52vw);
+      height: min(500px, 52vw);
       pointer-events: none;
       z-index: 5;
-      opacity: 0.08;
-      filter: grayscale(20%);
+      opacity: 0.12;
     }
 
     /* ══ LOGIN ══ */
@@ -185,7 +184,7 @@
       padding: 0.58rem 0.65rem; border-radius: var(--r-sm);
       background: var(--surface); border: 1px solid var(--border);
       color: var(--text); font-family: 'Space Grotesk',sans-serif;
-      font-size: 0.92rem; font-weight: 600; cursor: pointer;
+      font-size: 1rem; font-weight: 600; cursor: pointer;
       transition: all 0.18s; text-align: left; width: 100%;
       text-decoration: none; position: relative; overflow: hidden;
     }
@@ -204,8 +203,8 @@
     }
     .side-btn:hover .si { background: var(--surface3); }
     .side-btn .st { display: flex; flex-direction: column; min-width: 0; }
-    .side-btn .sn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; font-size: 0.92rem; }
-    .side-btn .sd { font-size: 0.64rem; font-family: 'JetBrains Mono',monospace; color: var(--text2); margin-top: 1px; }
+    .side-btn .sn { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.2; font-size: 1rem; }
+    .side-btn .sd { font-size: 0.67rem; font-family: 'JetBrains Mono',monospace; color: var(--text2); margin-top: 1px; }
 
     /* giro btn */
     .giro-btn {
@@ -230,8 +229,8 @@
     .geo-bg { background: rgba(129,140,248,0.15); }
     .fin-bg { background: rgba(34,211,160,0.12); }
     .giro-texts { display:flex; flex-direction:column; min-width:0; }
-    .giro-name { font-size: 0.92rem; font-weight: 700; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
-    .giro-desc { font-size: 0.64rem; color: var(--text2); font-family: 'JetBrains Mono',monospace; margin-top: 1px; }
+    .giro-name { font-size: 1rem; font-weight: 700; color: var(--text); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .giro-desc { font-size: 0.67rem; color: var(--text2); font-family: 'JetBrains Mono',monospace; margin-top: 1px; }
 
     /* ══ CENTRO ══ */
     .center {
@@ -441,8 +440,50 @@
 
 <!-- MARCA D'ÁGUA -->
 <div class="watermark">
-  <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/Gremio_logo.svg/500px-Gremio_logo.svg.png"
-       alt="Grêmio" style="width:100%;height:100%;object-fit:contain;"/>
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 596">
+    <!-- Escudo externo - contorno -->
+    <path d="M250 10 L470 80 L470 300 Q470 490 250 580 Q30 490 30 300 L30 80 Z"
+          fill="#1a2a4a" stroke="#4f8ef7" stroke-width="4"/>
+    <!-- Faixa azul superior -->
+    <path d="M30 80 L250 10 L470 80 L470 210 L30 210 Z"
+          fill="#1d4ed8"/>
+    <!-- Faixa preta central -->
+    <path d="M30 210 L470 210 L470 330 L30 330 Z"
+          fill="#0d1117"/>
+    <!-- Faixa branca inferior -->
+    <path d="M30 330 L470 330 L470 300 Q470 440 330 520 L250 560 Q130 520 80 460 L30 390 Z"
+          fill="#dde4f5"/>
+    <!-- Escudo interno menor -->
+    <path d="M250 50 L430 108 L430 295 Q430 450 250 530 Q70 450 70 295 L70 108 Z"
+          fill="none" stroke="#4f8ef7" stroke-width="2.5" stroke-dasharray="8 5" opacity="0.6"/>
+    <!-- Letras GFBPA estilizadas -->
+    <text x="250" y="155" text-anchor="middle"
+          font-family="'Space Grotesk', Arial, sans-serif"
+          font-weight="900" font-size="72" fill="#dde4f5" opacity="0.95"
+          letter-spacing="-2">GRÊMIO</text>
+    <!-- Subtítulo -->
+    <text x="250" y="200" text-anchor="middle"
+          font-family="'JetBrains Mono', monospace"
+          font-size="18" fill="#4f8ef7" opacity="0.8" letter-spacing="6">FBPA</text>
+    <!-- Estrela grande central -->
+    <text x="250" y="320" text-anchor="middle"
+          font-family="serif" font-size="110"
+          fill="#4f8ef7" opacity="0.9">★</text>
+    <!-- Três estrelinhas menores -->
+    <text x="148" y="380" text-anchor="middle" font-family="serif" font-size="38" fill="#dde4f5" opacity="0.7">★</text>
+    <text x="250" y="395" text-anchor="middle" font-family="serif" font-size="38" fill="#dde4f5" opacity="0.7">★</text>
+    <text x="352" y="380" text-anchor="middle" font-family="serif" font-size="38" fill="#dde4f5" opacity="0.7">★</text>
+    <!-- Linha decorativa -->
+    <line x1="100" y1="415" x2="400" y2="415" stroke="#4f8ef7" stroke-width="1.5" opacity="0.5"/>
+    <!-- Ano -->
+    <text x="250" y="445" text-anchor="middle"
+          font-family="'JetBrains Mono', monospace"
+          font-size="22" fill="#dde4f5" opacity="0.7" letter-spacing="8">1903</text>
+    <!-- Tricolor decorativo inferior -->
+    <rect x="140" y="462" width="60" height="8" fill="#1d4ed8" opacity="0.8" rx="2"/>
+    <rect x="205" y="462" width="60" height="8" fill="#0d1117" opacity="0.9" rx="2"/>
+    <rect x="270" y="462" width="60" height="8" fill="#dde4f5" opacity="0.7" rx="2"/>
+  </svg>
 </div>
 
 <!-- LOGIN -->
